@@ -8,8 +8,8 @@
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application
 {
-	[glView initWithWidth:360 Height:480 Octaves:4];
-	CGImageRef picture = [UIImage imageNamed:@"00.jpg"].CGImage;
+	[glView initWithWidth:640 Height:480 Octaves:4];
+	CGImageRef picture = [UIImage imageNamed:@"test.jpg"].CGImage;
 	NSMutableArray * test = [glView computeSiftOnCGImage:picture];
 }
 

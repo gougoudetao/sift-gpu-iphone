@@ -658,7 +658,11 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 }
 
 
-
+-(NSString *)applicationDocumentsDirectoryPath{
+    NSString *documentDirectory=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)lastObject];
+    
+    return documentDirectory;
+}
 
 
 -(NSMutableArray*) computeSiftOnCGImage:(CGImageRef)picture
@@ -667,7 +671,7 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 	//for debugging
 	NSTimeInterval tinit= [[NSDate date] timeIntervalSince1970];
 	int count[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
+    
 	//initializing a few variables
 	uint8_t *originalData;
 	originalData = (uint8_t *) calloc(width * height * 4, sizeof(uint8_t));
@@ -678,11 +682,10 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 	CGDataProviderRef dataRef = CGImageGetDataProvider(picture);
 	CFDataRef data = CGDataProviderCopyData(dataRef);
 	originalData = (GLubyte *) CFDataGetBytePtr(data);
-	neon_convert(grayData, originalData, width, height);
+	//neon_convert(grayData, originalData, width, height);
 	glBindTexture(GL_TEXTURE_2D, pic);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, grayData);
-	
-	
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, originalData);
+    
 	// --------------------- DETECTION ----------------
 	//Loop on octaves
     
@@ -690,545 +693,59 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
     
 	int w=width;
 	int h=height;
-	for (int i=0; i<NB_OCT; i++) {
-		
-		glViewport(0, 0, w, h);
-	
-		// First 4 "Half levels"
-		//horizontal smoothing
-		glUseProgram(smoothDouble);
-		glVertexAttribPointer(smoothDoubleWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
-		glVertexAttribPointer(smoothDoubleReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, pic);
-		glUniform1i(smoothDoublePic1,0);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, pic);
-		glUniform1i(smoothDoublePic0,1);
-		glActiveTexture(GL_TEXTURE0);
-		glUniform2f(smoothDoubleDirection, 1.0/(float)w, 0.0);
-		glUniform4fv(smoothDoubleGaussianCoeff, 15, coeffDown0);
-		glBindFramebuffer(GL_FRAMEBUFFER, dogBuf[i][0]);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		
-		//second pass
-		glUseProgram(smoothDouble);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, pic);
-		glUniform1i(smoothDoublePic1,0);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, dogTex[i][0]);
-		glUniform1i(smoothDoublePic0,1);
-		glActiveTexture(GL_TEXTURE0);
-		glUniform2f(smoothDoubleDirection, -1.0/(float)w, 0.0);
-		glUniform4fv(smoothDoubleGaussianCoeff, 15, coeffDown1);
-		glBindFramebuffer(GL_FRAMEBUFFER, dogBuf[i][1]);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		
-		//vertical smoothing
-		glUseProgram(smoothDouble);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, dogTex[i][1]);
-		glUniform1i(smoothDoublePic1,0);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, dogTex[i][1]);
-		glUniform1i(smoothDoublePic0,1);
-		glActiveTexture(GL_TEXTURE0);
-		glUniform2f(smoothDoubleDirection, 0.0, 1.0/(float)h);
-		glUniform4fv(smoothDoubleGaussianCoeff, 15, coeffDown0);
-		glBindFramebuffer(GL_FRAMEBUFFER, dogBuf[i][0]);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		//second pass
-		glUseProgram(smoothDouble);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, dogTex[i][1]);
-		glUniform1i(smoothDoublePic1,0);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, dogTex[i][0]);
-		glUniform1i(smoothDoublePic0,1);
-		glActiveTexture(GL_TEXTURE0);
-		glUniform2f(smoothDoubleDirection, 0.0, -1.0/(float)h);
-		glUniform4fv(smoothDoubleGaussianCoeff, 15, coeffDown1);
-		glBindFramebuffer(GL_FRAMEBUFFER, smoothBuf[i][0]);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		
-		
-		// Last 4 "Half levels"
-		//horizontal smoothing
-		glUseProgram(smoothDouble);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, pic);
-		glUniform1i(smoothDoublePic1,0);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, pic);
-		glUniform1i(smoothDoublePic0,1);
-		glActiveTexture(GL_TEXTURE0);
-		glUniform2f(smoothDoubleDirection, 1.0/(float)w, 0.0);
-		glUniform4fv(smoothDoubleGaussianCoeff, 15, coeffUp0);
-		glBindFramebuffer(GL_FRAMEBUFFER, dogBuf[i][0]);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		//second pass
-		glUseProgram(smoothDouble);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, pic);
-		glUniform1i(smoothDoublePic1,0);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, dogTex[i][0]);
-		glUniform1i(smoothDoublePic0,1);
-		glActiveTexture(GL_TEXTURE0);
-		glUniform2f(smoothDoubleDirection, -1.0/(float)w, 0.0);
-		glUniform4fv(smoothDoubleGaussianCoeff, 15, coeffUp1);
-		glBindFramebuffer(GL_FRAMEBUFFER, dogBuf[i][1]);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		
-		//vertical smoothing
-		glUseProgram(smoothDouble);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, dogTex[i][1]);
-		glUniform1i(smoothDoublePic1,0);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, dogTex[i][1]);
-		glUniform1i(smoothDoublePic0,1);
-		glActiveTexture(GL_TEXTURE0);
-		glUniform2f(smoothDoubleDirection, 0.0, 1.0/(float)h);
-		glUniform4fv(smoothDoubleGaussianCoeff, 15, coeffUp0);
-		glBindFramebuffer(GL_FRAMEBUFFER, dogBuf[i][0]);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		//second pass
-		glUseProgram(smoothDouble);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, dogTex[i][1]);
-		glUniform1i(smoothDoublePic1,0);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, dogTex[i][0]);
-		glUniform1i(smoothDoublePic0,1);
-		glActiveTexture(GL_TEXTURE0);
-		glUniform2f(smoothDoubleDirection, 0.0, -1.0/(float)h);
-		glUniform4fv(smoothDoubleGaussianCoeff, 15, coeffUp1);
-		glBindFramebuffer(GL_FRAMEBUFFER, smoothBuf[i][1]);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-		
-		//While looping on octaves, we compute the gradients
-		//horizontal grad
-		glUseProgram(grad);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, smoothTex[i][0]);
-		glUniform1i(gradPic0, 0);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, smoothTex[i][1]);
-		glUniform1i(gradPic1, 1);
-		glActiveTexture(GL_TEXTURE0);
-		glUniform2f(gradDirection, 1.0/(float)w, 0.0);
-		glBindFramebuffer(GL_FRAMEBUFFER, gxBuf[i]);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		
-		//vertical grad
-		glUseProgram(grad);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, smoothTex[i][0]);
-		glUniform1i(gradPic0, 0);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, smoothTex[i][1]);
-		glUniform1i(gradPic1, 1);
-		glActiveTexture(GL_TEXTURE0);
-		glUniform2f(gradDirection, 0.0, 1.0/(float)h);
-		glBindFramebuffer(GL_FRAMEBUFFER, gyBuf[i]);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		
-		
-		//DoG computation
-		//First 3 levels
-		glUseProgram(dog);
-		glBindTexture(GL_TEXTURE_2D, smoothTex[i][0]);
-		glUniform1i(dogPic0, 0);
-		glBindFramebuffer(GL_FRAMEBUFFER, smoothBuf[i][2]);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		
-		glUseProgram(smooth);
-		glBindTexture(GL_TEXTURE_2D, smoothTex[i][2]);
-		glUniform1i(smoothPic0, 0);
-		glUniform1fv(smoothGaussianCoeff, 8, coeffDoG);
-		glUniform2f(smoothDirection, 1.0/(float)w, 0.0);
-		glBindFramebuffer(GL_FRAMEBUFFER, smoothBuf[i][0]);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		glUseProgram(smooth);
-		glBindTexture(GL_TEXTURE_2D, smoothTex[i][0]);
-		glUniform1i(smoothPic0, 0);
-		glUniform1fv(smoothGaussianCoeff, 8, coeffDoG);
-		glUniform2f(smoothDirection, 0.0, 1.0/(float)h);
-		glBindFramebuffer(GL_FRAMEBUFFER, dogBuf[i][0]);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		
-		
-	
-		//Next and last 3 levels
-		glUseProgram(dog);
-		glBindTexture(GL_TEXTURE_2D, smoothTex[i][1]);
-		glUniform1i(dogPic0, 0);
-		glBindFramebuffer(GL_FRAMEBUFFER, smoothBuf[i][3]);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		
-		glUseProgram(smooth);
-		glBindTexture(GL_TEXTURE_2D, smoothTex[i][3]);
-		glUniform1i(smoothPic0, 0);
-		glUniform1fv(smoothGaussianCoeff, 8, coeffDoG);
-		glUniform2f(smoothDirection, 1.0/(float)w, 0.0);
-		glBindFramebuffer(GL_FRAMEBUFFER, smoothBuf[i][1]);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		glUseProgram(smooth);
-		glBindTexture(GL_TEXTURE_2D, smoothTex[i][1]);
-		glUniform1i(smoothPic0, 0);
-		glUniform1fv(smoothGaussianCoeff, 8, coeffDoG);
-		glUniform2f(smoothDirection, 0.0, 1.0/(float)h);
-		glBindFramebuffer(GL_FRAMEBUFFER, dogBuf[i][1]);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		
-		//NMS
-		glUseProgram(nms);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, dogTex[i][0]);
-		glUniform1i(nmsPic0, 0);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, dogTex[i][1]);
-		glUniform1i(nmsPic1, 1);
-		glActiveTexture(GL_TEXTURE0);
-		glUniform1f(nmsWidth, (float)w);
-		glUniform1f(nmsHeight, (float)h);
-		glBindFramebuffer(GL_FRAMEBUFFER, detBuf[i]);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		
-		//readback to CPU
-		glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, nmsOut[i]);
-		
-		
-		//Next octave
-		w>>=1;
-		h>>=1;
-		
-	}
-
-
-
-	//CPU Processing part: 
-	// we must explore the image and find the coordinates and scales of keypoints,
-	// then store them in an array 
-
-	w=width;
-	h=height;
-	NSMutableArray *tab = [NSMutableArray arrayWithCapacity:0];
-	for (int i=0; i<NB_OCT; i++) {
-		for (int j=0; j<h; j++) {
-			for (int k=0; k<w; k++) {
-				for (int l=0; l<4; l++) {
-					if (nmsOut[i][4*(w*j+k)+l]>0) {
-						KeyPoint *key = [KeyPoint new];
-						[key initParamsX:(k<<i) Y:(j<<i) Level:l+4*i];
-						int regSize = (int)(1.0*sigma[l]*exp2(i)); 
-						if ([key getX]>regSize && [key getX]<width-regSize && [key getY]>regSize && [key getY]<height-regSize ) {
-							[tab addObject:key];
-						}
-					}
-				}
-			}
-		}
-		w>>=1;
-		h>>=1;
-	}
-	//sqSize = size of the square we will use to display the tiled regions of interest
-	int sqSize=(int)ceil(sqrt((float)[tab count]));
-	int nb=[tab count];
-	
-
-	uint8_t * edgeOut = (uint8_t *) calloc(sqSize * sqSize *4, sizeof(uint8_t));
-	// back to GPU for edge response and low contrast response suppression
-	// first we extract the 3 x 3 pixels (at octave size) region around each keypoint
-	// and store them in one single texture.
-	glViewport(0, 0, sqSize, sqSize);
-	glBindFramebuffer(GL_FRAMEBUFFER, edgeBuf);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glBindTexture(GL_TEXTURE_2D, edgeTex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sqSize, sqSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-	for (int i=0; i<nb; i++) {
-		KeyPoint * key = [tab objectAtIndex:i];
-		int o = [key getLevel]/4;
-		int s = [key getLevel]%4;
-		float w = (float)width/(float)exp2(o);
-		float h = (float)height/(float)exp2(o);
-		float x = (float)[key getX]/(float)width;
-		float y = (float)[key getY]/(float)height;
-		
-		glUseProgram(edgeSuppression);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, dogTex[o][0]);
-		glUniform1i(edgeSuppressionPic0, 0);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, dogTex[o][1]);
-		glUniform1i(edgeSuppressionPic1, 1);
-		glActiveTexture(GL_TEXTURE0);
-		glUniform1f(edgeSuppressionWidth, (float)w);
-		glUniform1f(edgeSuppressionHeight, (float)h);
-		glUniform1i(edgeSuppressionScale, s);
-		glUniform2f(edgeSuppressionReadingPosition, x, y);
-		
-		GLfloat vCoords[] = {
-			(float)(i%sqSize)*2.0/(float)sqSize-1.0, (float)(i/sqSize)*2.0/(float)sqSize-1.0,
-			(float)(i%sqSize+1)*2.0/(float)sqSize-1.0, (float)(i/sqSize)*2.0/(float)sqSize-1.0,
-			(float)(i%sqSize)*2.0/(float)sqSize-1.0, (float)(i/sqSize+1)*2.0/(float)sqSize-1.0,
-			(float)(i%sqSize+1)*2.0/(float)sqSize-1.0, (float)(i/sqSize+1)*2.0/(float)sqSize-1.0,
-		};
-		glVertexAttribPointer(edgeSuppressionWritingPosition, 2, GL_FLOAT, GL_FALSE, 0, vCoords);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	}
-				
-	//readback to CPU for processing
-	glReadPixels(0, 0, sqSize, sqSize, GL_RGBA, GL_UNSIGNED_BYTE, edgeOut);
-	// discard the pixels that don't pass the test.
-	NSMutableIndexSet * discard = [NSMutableIndexSet indexSet];
-	for (int i=0; i<nb; i++)
-	{
-		int discarded = edgeOut[4*i];
-		if (discarded>200) {
-			[discard addIndex:i];
-		}
-	}
-	[tab removeObjectsAtIndexes:discard];
-	NSLog(@"Discarding %u keypoints",[discard count]);
-	sqSize=(int)ceil(sqrt((float)[tab count]));
-	nb=[tab count];
-	
-    double tdetect = [[NSDate date] timeIntervalSince1970]-tdetect0;
     
-    double tori0 = [[NSDate date] timeIntervalSince1970];
+    glViewport(0, 0, w, h);
+	
+    // First 4 "Half levels"
+    //horizontal smoothing
+    glUseProgram(smoothDouble);
+    glVertexAttribPointer(smoothDoubleWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
+    glVertexAttribPointer(smoothDoubleReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, pic);
+    glUniform1i(smoothDoublePic1,0);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, pic);
+    glUniform1i(smoothDoublePic0,1);
+    glActiveTexture(GL_TEXTURE0);
+    glUniform2f(smoothDoubleDirection, 1.0/(float)w, 0.0);
+    glUniform4fv(smoothDoubleGaussianCoeff, 15, coeffDown0);
+    glBindFramebuffer(GL_FRAMEBUFFER, dogBuf[0][0]);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
-	//back to GPU for orientation computation
-	glViewport(0, 0, 16*sqSize, 16*sqSize);
-	glBindFramebuffer(GL_FRAMEBUFFER, regBuf);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glBindTexture(GL_TEXTURE_2D, regTex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16*sqSize, 16*sqSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-
-
-	//we tile the regions of interest in one single texture, and compute for each pixel
-	//its orientation and weighted magnitude.
-	for (int i=0; i<nb; i++) {
-		KeyPoint* key = [tab objectAtIndex:i];
-		int o = [key getLevel]/4;
-		int s = [key getLevel]%4;
-		float sig = sigma[s];
-		float w = (float)(width>>o);
-		float h = (float)(height>>o);
-		GLfloat x = (float)[key getX]/(float)width;
-		GLfloat y = (float)[key getY]/(float)height;
-		glUseProgram(orientation);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, gxTex[o]);
-		glUniform1i(orientationPicGradx, 0);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, gyTex[o]);
-		glUniform1i(orientationPicGrady, 1);
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, gauss);
-		glUniform1i(orientationPicGauss, 2);
-		glActiveTexture(GL_TEXTURE0);
-		glUniform1i(orientationScale, s);
-		glUniform1i(orientationTheta, 0);
-		GLfloat regCoord[] = 
-		{
-			x-(8.0*sig)/(float)w, y-(8.0*sig)/(float)h,
-			x+(8.0*sig)/(float)w, y-(8.0*sig)/(float)h,
-			x-(8.0*sig)/(float)w, y+(8.0*sig)/(float)h,
-			x+(8.0*sig)/(float)w, y+(8.0*sig)/(float)h,
-		};
-		double minX=(double)(i%sqSize)/(double)sqSize*2.0-1.0;
-		double maxX=minX+2.0/(double)sqSize;
-		double minY=(double)(i/sqSize)/(double)sqSize*2.0-1.0;
-		double maxY=minY+2.0/(double)sqSize;
-		GLfloat regVertexCoord[] = 
-		{
-			minX, minY,
-			maxX, minY,
-			minX, maxY,
-			maxX, maxY,
-		};
-		glVertexAttribPointer(orientationReadingPosition0, 2, GL_FLOAT, GL_FALSE, 0, regCoord);
-		glVertexAttribPointer(orientationWritingPosition, 2, GL_FLOAT, GL_FALSE, 0, regVertexCoord);
-		glVertexAttribPointer(orientationReadingPosition1, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	}
-	
-	//we compute the main orientation from the previous texture.
-	glViewport(0, 0, sqSize, sqSize);
-	glBindTexture(GL_TEXTURE_2D, winTex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sqSize, sqSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-	glUseProgram(mainOrientation);
-	glBindTexture(GL_TEXTURE_2D, regTex);
-	glUniform1i(mainOrientationPic0, 0);
-	glVertexAttribPointer(mainOrientationWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
-	glVertexAttribPointer(mainOrientationReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
-	glUniform1i(mainOrientationSize, sqSize);
-	glBindFramebuffer(GL_FRAMEBUFFER, winBuf);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	
-	
-	//back to CPU to save theta in the array
-	uint8_t *winOut = (uint8_t *) calloc(sqSize * sqSize * 4, sizeof(uint8_t));
-	glReadPixels(0, 0, sqSize, sqSize, GL_RGBA, GL_UNSIGNED_BYTE, winOut);
-	for (int i=0; i<nb; i++) {
-		[[tab objectAtIndex:i] setTheta:winOut[4*i]];
-		int j=1;
-		while (j<4 && winOut[4*i+j]<100) { //multi-orientation part
-			KeyPoint * key = [KeyPoint new];
-			[key initParamsX:[[tab objectAtIndex:i] getX] Y:[[tab objectAtIndex:i] getY] Level:[[tab objectAtIndex:i] getLevel]];
-			[key setS:[[tab objectAtIndex:i] getS]];
-			[key setTheta:winOut[4*i+j]];
-			[tab addObject:key];
-			j++;
-		}
-	}
-	sqSize=(int)ceil(sqrt((float)[tab count]));
-	nb=[tab count];
-	
-	double tori = [[NSDate date] timeIntervalSince1970] - tori0;
-	
-    double tdesc0 = [[NSDate date] timeIntervalSince1970];
-	
-	//description: we store the rotated regions of interest in one single texture
-	// and compute their new orientation and weighted magnitude.
-	// tiled in 30x30 while only the centered 16x16 are useful to allow 45° rotations.
-	glViewport(0, 0, 30*sqSize, 30*sqSize);
-	glBindFramebuffer(GL_FRAMEBUFFER, rotBuf);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glBindTexture(GL_TEXTURE_2D, rotTex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 30*sqSize, 30*sqSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-	glBindTexture(GL_TEXTURE_2D, desTex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 4*sqSize, 4*sqSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-	
-	for (int i=0; i<nb; i++) {
-		KeyPoint* key = [tab objectAtIndex:i];
-		int o = [key getLevel]/4;
-		int s = [key getLevel]%4;
-		int t = [key getT];
-		float sig = M_SQRT2*sigma[s];
-		float w = (float)(width>>o);
-		float h = (float)(height>>o);
-		GLfloat x = (float)[key getX]/(float)width;
-		GLfloat y = (float)[key getY]/(float)height;
-		GLfloat posX = ((float)(i%sqSize)+0.5)/(float)sqSize*2.0-1.0;
-		GLfloat posY = ((float)(i/sqSize)+0.5)/(float)sqSize*2.0-1.0;
-		GLfloat RotPos [] = { //had to adjustate so there is the right number of pixels:
-			posX+1.01*cos(-(3+t)*M_PI_4)/(float)sqSize, posY+sin(-(3+t)*M_PI_4)/(float)sqSize,
-			posX+1.01*cos(-(1+t)*M_PI_4)/(float)sqSize, posY+sin(-(1+t)*M_PI_4)/(float)sqSize,
-			posX+1.01*cos((3-t)*M_PI_4)/(float)sqSize, posY+sin((3-t)*M_PI_4)/(float)sqSize,
-			posX+1.01*cos((1-t)*M_PI_4)/(float)sqSize, posY+sin((1-t)*M_PI_4)/(float)sqSize,
-		};
-		glUseProgram(orientation);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, gxTex[o]);
-		glUniform1i(orientationPicGradx, 0);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, gyTex[o]);
-		glUniform1i(orientationPicGrady, 1);
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, gauss2);
-		glUniform1i(orientationPicGauss, 2);
-		glActiveTexture(GL_TEXTURE0);
-		glUniform1i(orientationScale, s);
-		glUniform1i(orientationTheta, t);
-		GLfloat regCoord[] = 
-		{
-			x-(8.0*sig)/(float)w, y-(8.0*sig)/(float)h,
-			x+(8.0*sig)/(float)w, y-(8.0*sig)/(float)h,
-			x-(8.0*sig)/(float)w, y+(8.0*sig)/(float)h,
-			x+(8.0*sig)/(float)w, y+(8.0*sig)/(float)h,
-		};
-		glVertexAttribPointer(orientationReadingPosition0, 2, GL_FLOAT, GL_FALSE, 0, regCoord);
-		glVertexAttribPointer(orientationWritingPosition, 2, GL_FLOAT, GL_FALSE, 0, RotPos);
-		glVertexAttribPointer(orientationReadingPosition1, 2, GL_FLOAT, GL_FALSE, 0, gaussCoord);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	
-	}
-	
-	
-	//finally we compute the descriptor from the previous texture.
-	glViewport(0, 0, 4*sqSize, 4*sqSize);
-	glUseProgram(descriptor);
-	glVertexAttribPointer(descriptorReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
-	glVertexAttribPointer(descriptorWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
-	glBindTexture(GL_TEXTURE_2D, rotTex);
-	glUniform1i(descriptorPic0, 0);
-	glUniform1i(descriptorSize, sqSize);
-	glBindFramebuffer(GL_FRAMEBUFFER, desBuf);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	
-	//readback descriptor to CPU
-	uint8_t *desOut = (uint8_t *) calloc(16.0 * sqSize * sqSize * 4, sizeof(uint8_t));
-	uint8_t *reorgOut = (uint8_t *) calloc(32.0 * 4 * nb, sizeof(uint8_t));
-	glReadPixels(0, 0, 4*sqSize, 4*sqSize, GL_RGBA, GL_UNSIGNED_BYTE, desOut);
-	reorganize(reorgOut, desOut, nb, sqSize);
-	normalize(tab, reorgOut, nb);
-	
-    double tdesc = [[NSDate date] timeIntervalSince1970]- tdesc0;
-	
-	/*
-	//writing to text file
-	NSMutableString *desString = [NSMutableString stringWithCapacity:0];
-	NSMutableString *frameString = [NSMutableString stringWithCapacity:0];
-	for (int i=0; i<[tab count]; i++) {
-		KeyPoint *key=[tab objectAtIndex:i];
-		[frameString appendString:[NSString stringWithFormat:@"%u\t%u\t%1.3f\t%1.3f\t",[key getX], height-[key getY]-1, [key getS], M_PI-([key getT])*M_PI_4 ]];
-		[frameString appendString:@"\n"];
-		uint8_t * values = [key getD];
-		for (int j=0; j<128; j++) {
-			[desString appendString:[NSString stringWithFormat:@"%u ", values[j]]];
-		}
-		[desString appendString:@"\n"];
-	}
-	[desString writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Documents/result.des"] atomically:YES encoding:NSUTF8StringEncoding error:NULL];
-	[frameString writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Documents/result.frame"] atomically:YES encoding:NSUTF8StringEncoding error:NULL];
-	/* */
-	
-	//Gives the number of keypoints per scale
-	for (int i=0; i<nb; i++) {
-		count[[[tab objectAtIndex:i] getLevel]]++;
-	}
-	NSMutableString * display = [NSMutableString stringWithCapacity:0];
-	[display appendString:@"\n"];
-	[display appendString:[NSString stringWithFormat:@"Total Keypoints: %u \n",nb]];
-	for (int i=0; i<16
-		 ; i++) {
-		[display appendString:[NSString stringWithFormat:@"Level %u : %u \n",i,count[i]]];
-	}
-	NSLog(display,nil);
-	
-
-	NSTimeInterval total = [[NSDate date] timeIntervalSince1970]-tinit;
-
-	NSString *result = [NSString stringWithFormat:@"Done in %1.3f s \nDetection: %1.3f s\nOrientation: %1.3f s\nDescription: %1.3f s\n",total, tdetect, tori, tdesc];
-	[[[[UIAlertView alloc] initWithTitle:@"Results"
-                                 message:result
-                                delegate:nil
-                       cancelButtonTitle:@"OK"
-                       otherButtonTitles:nil] autorelease] show];
-	
-	return tab;
+    glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, grayData);
+    
+    NSData* imageData=[NSData dataWithBytes:grayData length:4*width*height];
+    CGColorSpaceRef colorSpace;
+    colorSpace=CGColorSpaceCreateDeviceRGB();
+    
+    CGDataProviderRef provider = CGDataProviderCreateWithCFData((__bridge CFDataRef)imageData);
+    
+    // Creating CGImage from cv::Mat
+    CGImageRef imageRef = CGImageCreate(width,                                 //width
+                                        height,                                 //height
+                                        8,                                          //bits per component
+                                        8 * 4,                       //bits per pixel
+                                        width*4,                            //bytesPerRow
+                                        colorSpace,                                 //colorspace
+                                        kCGImageAlphaNone|kCGBitmapByteOrderDefault,// bitmap info
+                                        provider,                                   //CGDataProviderRef
+                                        NULL,                                       //decode
+                                        false,                                      //should interpolate
+                                        kCGRenderingIntentDefault                   //intent
+                                        );
+    UIImage* finalImage=[UIImage imageWithCGImage:imageRef];
+    CGImageRelease(imageRef);
+    CGDataProviderRelease(provider);
+    CGColorSpaceRelease(colorSpace);
+    
+    NSString* filename=[[self applicationDocumentsDirectoryPath]stringByAppendingPathComponent:@"test.jpg"];
+    
+    [UIImageJPEGRepresentation(finalImage, 1.0)writeToFile:filename atomically:YES];
+    
+    NSLog(@"save image");
+    return 0;
 	
 }
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A1C9D4319CACD3D001F2F7E /* test.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3A1C9D4219CACD3D001F2F7E /* test.jpg */; };
 		9CA72716142269B500CC88CA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CA72715142269B500CC88CA /* UIKit.framework */; };
 		9CA72718142269B500CC88CA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CA72717142269B500CC88CA /* Foundation.framework */; };
 		9CA7271A142269B500CC88CA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CA72719142269B500CC88CA /* CoreGraphics.framework */; };
@@ -36,6 +37,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3A1C9D4219CACD3D001F2F7E /* test.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = test.jpg; sourceTree = "<group>"; };
 		9CA72711142269B500CC88CA /* GPU_SIFT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GPU_SIFT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CA72715142269B500CC88CA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		9CA72717142269B500CC88CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -167,6 +169,7 @@
 		9CA7277E14226AD400CC88CA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3A1C9D4219CACD3D001F2F7E /* test.jpg */,
 				9CA7277F14226B0300CC88CA /* 00.jpg */,
 			);
 			name = Resources;
@@ -197,6 +200,8 @@
 /* Begin PBXProject section */
 		9CA72708142269B500CC88CA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = 9CA7270B142269B500CC88CA /* Build configuration list for PBXProject "GPU_SIFT" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -232,6 +237,7 @@
 				9CA7278D14226E8D00CC88CA /* smooth.fsh in Resources */,
 				9CA7278E14226E8D00CC88CA /* smoothDouble.fsh in Resources */,
 				9CA7278F14226E8D00CC88CA /* vertex.vsh in Resources */,
+				3A1C9D4319CACD3D001F2F7E /* test.jpg in Resources */,
 				9CA7279014226E8D00CC88CA /* vertex0.vsh in Resources */,
 				9CA7279114226E8D00CC88CA /* vertex2.vsh in Resources */,
 				9CA7278014226B0300CC88CA /* 00.jpg in Resources */,
