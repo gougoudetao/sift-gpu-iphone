@@ -3,16 +3,14 @@
 varying mediump vec2 tCoord;
 uniform mediump sampler2D pic0;
 uniform mediump sampler2D pic1;
-uniform mediump vec4 gaussianCoeff[15];
-uniform mediump vec2 direction;
+uniform mediump vec2 offset[8];
+uniform mediump vec4 kernelValue[8];
+
 void main(void)
 {
-	mediump vec4 r = gaussianCoeff[0]*texture2D(pic0, tCoord);
-	for (int i=1; i<8; i++) {
-		r+=gaussianCoeff[i]*texture2D(pic1, tCoord+float(i)*direction);
-		r+=gaussianCoeff[i+7]*texture2D(pic1, tCoord+float(i+7)*direction);
-		
-	}
-	gl_FragColor = r;
-
+    mediump vec4 sum=vec4(0.25,0.25,0.25,0.25)*texture2D(pic0,tCoord);
+    for(int i=0;i<8;++i){
+        sum+=kernelValue[i]*texture2D(pic1,tCoord+offset[i]);
+    }
+    gl_FragColor=sum;
 }

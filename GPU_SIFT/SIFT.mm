@@ -1,14 +1,24 @@
 
-#include <QuartzCore/QuartzCore.h>
-#include <OpenGLES/ES2/gl.h>
-#include "SIFT.h"
+#import <QuartzCore/QuartzCore.h>
+#import <OpenGLES/ES2/gl.h>
+#import <opencv2/highgui/ios.h>
+
+#import "SIFT.h"
 #define STRINGIFY(A) #A
 
 #ifdef _ARM_ARCH_7
-	#include <arm_neon.h>
+	#import <arm_neon.h>
 #endif
 
-#include "keyPoint.h"
+#import "keyPoint.h"
+
+#if 1
+#define TS(name) int64 t_##name = cv::getTickCount()
+#define TE(name) printf("TIMER_" #name ": %.2fms\n", 1000.*((cv::getTickCount() - t_##name) / cv::getTickFrequency()))
+#else
+#define TS(name)
+#define TE(name)
+#endif
 
 @interface SIFT (EAGLViewSprite)
 
@@ -247,13 +257,12 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 // Initialize the class
 - (void)initWithWidth:(int)picWidth Height:(int)picHeight Octaves:(int)oct
 {
-	
 	width=picWidth;
 	height=picHeight;
 	NB_OCT = oct;
 		
 	// Full screen writing coordinates
-	writingPosition[0] = -1.0;  writingPosition[1] = -1.0;  writingPosition[2] = 1.0;  writingPosition[3] = -1.0;  writingPosition[4] = -1.0;  writingPosition[5] = 1.0;  writingPosition[6] = 1.0;  writingPosition[7] = 1.0;  
+	writingPosition[0] = -1.0;  writingPosition[1] = -1.0;  writingPosition[2] = 1.0;  writingPosition[3] = -1.0;  writingPosition[4] = -1.0;  writingPosition[5] = 1.0;  writingPosition[6] = 1.0;  writingPosition[7] = 1.0;
 	
 	// Fulle screen reading coordinates
 	readingPosition[0] = 0.0;  readingPosition[1] = 0.0;  readingPosition[2] = 1.0;  readingPosition[3] = 0.0;  readingPosition[4] = 0.0;  readingPosition[5] = 1.0;  readingPosition[6] = 1.0;  readingPosition[7] = 1.0;  
@@ -327,32 +336,6 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 	/* Builds shaders and sends them data, or at least locates the
 	 shader variable position so data can be sent to it later */
 	
-	//printer init
-	printer = BuildProgram(@"vertex",@"printer");
-	glUseProgram(printer);
-	printerWritingPosition=glGetAttribLocation(printer, "writingPosition");
-	glVertexAttribPointer(printerWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
-	glEnableVertexAttribArray(printerWritingPosition);
-	printerReadingPosition=glGetAttribLocation(printer, "readingPosition");
-	glVertexAttribPointer(printerReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
-	glEnableVertexAttribArray(printerReadingPosition);
-	printerPic0 = glGetUniformLocation(printer, "pic");
-	
-	
-	//gradient init
-	grad = BuildProgram(@"vertex",@"gradient");
-	glUseProgram(grad);
-	gradWritingPosition=glGetAttribLocation(grad, "writingPosition");
-	glVertexAttribPointer(gradWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
-	glEnableVertexAttribArray(gradWritingPosition);
-	gradReadingPosition=glGetAttribLocation(grad, "readingPosition");
-	glVertexAttribPointer(gradReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
-	glEnableVertexAttribArray(gradReadingPosition);
-	gradPic0 = glGetUniformLocation(grad, "pic0");
-	gradPic1 = glGetUniformLocation(grad, "pic1");
-	gradSigma = glGetUniformLocation(grad, "sigma");
-	glUniform1fv(gradSigma, 4, sigma);
-	gradDirection = glGetUniformLocation(grad, "direction");
 	
 	//smoothDouble init, computes high precision smoothing in 2 pass
 	smoothDouble = BuildProgram(@"vertex", @"smoothDouble");
@@ -363,104 +346,10 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 	smoothDoubleReadingPosition=glGetAttribLocation(smoothDouble, "readingPosition");
 	glVertexAttribPointer(smoothDoubleReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
 	glEnableVertexAttribArray(smoothDoubleReadingPosition);
-	smoothDoubleGaussianCoeff = glGetUniformLocation(smoothDouble, "gaussianCoeff");
-	smoothDoubleDirection = glGetUniformLocation(smoothDouble, "direction"); 
-	smoothDoublePic1 = glGetUniformLocation(smoothDouble, "pic1");
+	smoothDoubleGaussianCoeff = glGetUniformLocation(smoothDouble, "kernelValue");
+	smoothDoubleDirection = glGetUniformLocation(smoothDouble, "offset");
 	smoothDoublePic0 = glGetUniformLocation(smoothDouble, "pic0");
-	
-	//smooth init, more approximate version used to smooth DoG results
-	smooth = BuildProgram(@"vertex", @"smooth");
-	glUseProgram(smooth);
-	smoothWritingPosition=glGetAttribLocation(smooth, "writingPosition");
-	glVertexAttribPointer(smoothWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
-	glEnableVertexAttribArray(smoothWritingPosition);
-	smoothReadingPosition=glGetAttribLocation(smooth, "readingPosition");
-	glVertexAttribPointer(smoothReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
-	glEnableVertexAttribArray(smoothReadingPosition);
-	smoothGaussianCoeff = glGetUniformLocation(smooth, "gaussianCoeff");
-	smoothDirection = glGetUniformLocation(smooth, "direction"); 
-	smoothPic0 = glGetUniformLocation(smooth, "pic");
-	
-	//dog init
-	dog=BuildProgram(@"vertex", @"dog");
-	glUseProgram(dog);
-	dogWritingPosition=glGetAttribLocation(dog, "writingPosition");
-	glVertexAttribPointer(dogWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
-	glEnableVertexAttribArray(dogWritingPosition);
-	dogReadingPosition=glGetAttribLocation(dog, "readingPosition");
-	glVertexAttribPointer(dogReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
-	glEnableVertexAttribArray(dogReadingPosition);
-	dogPic0 = glGetUniformLocation(dog, "pic");
-
-	
-	//NMS init
-	nms=BuildProgram(@"vertex", @"nms");
-	glUseProgram(nms);
-	nmsWritingPosition=glGetAttribLocation(nms, "writingPosition");
-	glVertexAttribPointer(nmsWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
-	glEnableVertexAttribArray(nmsWritingPosition);
-	nmsReadingPosition=glGetAttribLocation(nms, "readingPosition");
-	glVertexAttribPointer(nmsReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
-	glEnableVertexAttribArray(nmsReadingPosition);
-	nmsWidth = glGetUniformLocation(nms, "width");
-	nmsHeight = glGetUniformLocation(nms, "height");
-	nmsPic0 = glGetUniformLocation(nms, "pic0");
-	nmsPic1 = glGetUniformLocation(nms, "pic1");
-	
-
-	//Edge Response Suppression init
-	edgeSuppression=BuildProgram(@"vertex0", @"edgeSuppression");
-	glUseProgram(edgeSuppression);
-	edgeSuppressionWritingPosition=glGetAttribLocation(edgeSuppression, "writingPosition");
-	glEnableVertexAttribArray(edgeSuppressionWritingPosition);
-	edgeSuppressionPic0 = glGetUniformLocation(edgeSuppression, "pic0");
-	edgeSuppressionPic1 = glGetUniformLocation(edgeSuppression, "pic1");
-	edgeSuppressionWidth = glGetUniformLocation(edgeSuppression, "width");
-	edgeSuppressionHeight = glGetUniformLocation(edgeSuppression, "height");
-	edgeSuppressionScale = glGetUniformLocation(edgeSuppression, "scale");
-	edgeSuppressionReadingPosition = glGetUniformLocation(edgeSuppression, "readingPosition");
-	
-	
-	//orientation init
-	orientation=BuildProgram(@"vertex2", @"orientation");
-	glUseProgram(orientation);
-	orientationWritingPosition=glGetAttribLocation(orientation, "writingPosition");
-	glEnableVertexAttribArray(orientationWritingPosition);
-	orientationReadingPosition0=glGetAttribLocation(orientation, "readingPositionGrad");
-	glEnableVertexAttribArray(orientationReadingPosition0);
-	orientationReadingPosition1=glGetAttribLocation(orientation, "readingPositionGauss");
-	glVertexAttribPointer(orientationReadingPosition1, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
-	glEnableVertexAttribArray(orientationReadingPosition1);
-	orientationPicGradx=glGetUniformLocation(orientation, "gradx");
-	orientationPicGrady=glGetUniformLocation(orientation, "grady");
-	orientationPicGauss=glGetUniformLocation(orientation, "gauss");
-	orientationScale=glGetUniformLocation(orientation, "scale");
-	orientationTheta=glGetUniformLocation(orientation, "theta");
-	
-	
-	//main orientation init
-	mainOrientation=BuildProgram(@"vertex", @"mainOrientation");
-	glUseProgram(mainOrientation);
-	mainOrientationWritingPosition=glGetAttribLocation(mainOrientation, "writingPosition");
-	glVertexAttribPointer(mainOrientationWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
-	glEnableVertexAttribArray(mainOrientationWritingPosition);
-	mainOrientationReadingPosition=glGetAttribLocation(mainOrientation, "readingPosition");
-	glVertexAttribPointer(mainOrientationReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
-	glEnableVertexAttribArray(mainOrientationReadingPosition);
-	mainOrientationSize=glGetUniformLocation(mainOrientation, "sqSize");
-	mainOrientationPic0=glGetUniformLocation(mainOrientation, "pic0");
-	
-	//descriptor init
-	descriptor=BuildProgram(@"vertex", @"descriptor");
-	glUseProgram(descriptor);
-	descriptorWritingPosition=glGetAttribLocation(descriptor, "writingPosition");
-	glVertexAttribPointer(descriptorWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
-	glEnableVertexAttribArray(descriptorWritingPosition);
-	descriptorReadingPosition=glGetAttribLocation(descriptor, "readingPosition");
-	glVertexAttribPointer(descriptorReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
-	glEnableVertexAttribArray(descriptorReadingPosition);
-	descriptorSize=glGetUniformLocation(descriptor, "sqSize");
-	descriptorPic0=glGetUniformLocation(descriptor, "pic0");
+    smoothDoublePic1 = glGetUniformLocation(smoothDouble, "pic1");
 
 	// ---------------------- BUFFERS AND TEXTURES INITIALIZATION --------------------
 	
@@ -517,8 +406,8 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 
 	glGenTextures(1, &pic);
 	glBindTexture(GL_TEXTURE_2D, pic);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
@@ -541,7 +430,7 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 	
 	// "classical" buffer, not framebuffer
 	//uint8_t *nmsOut[NB_OCT];
-	nmsOut = calloc(NB_OCT, sizeof(uint8_t*));
+	//nmsOut = calloc(NB_OCT, sizeof(uint8_t*));
 	
 	for (int i=0; i<NB_OCT; i++) {
 		
@@ -549,8 +438,8 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 		glBindFramebuffer(GL_FRAMEBUFFER, dogBuf[i][0]);
 		glGenTextures(1, &dogTex[i][0]);
 		glBindTexture(GL_TEXTURE_2D, dogTex[i][0]);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width>>i, height>>i, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
@@ -644,7 +533,7 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width>>i, height>>i, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, smoothTex[i][3], 0);
 		
-		nmsOut[i] = (uint8_t *) calloc((width>>i)*(height>>i)*4, sizeof(uint8_t));
+		//nmsOut[i] = (uint8_t *) calloc((width>>i)*(height>>i)*4, sizeof(uint8_t));
 
 	}
 	
@@ -667,6 +556,40 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 
 -(NSMutableArray*) computeSiftOnCGImage:(CGImageRef)picture
 {
+    UIImage* image=[UIImage imageWithCGImage:picture];
+    cv::Mat frame;
+    UIImageToMat(image,frame);
+    cv::Mat gaussFrame(frame.rows,frame.cols,frame.type());
+    TS(OPENCV_Gauss);
+    cv::GaussianBlur(frame, gaussFrame, cv::Size(3,3), 0.0);
+    TE(OPENCV_Gauss);
+    
+    UIImage* gaussImage=MatToUIImage(gaussFrame);
+    NSString* gaussImageFilename=[[self applicationDocumentsDirectoryPath]stringByAppendingPathComponent:@"gauss.jpg"];
+    [UIImageJPEGRepresentation(gaussImage, 1.0)writeToFile:gaussImageFilename atomically:YES];
+    
+    
+    const float offset[16]={
+        -1.0/width,-1.0/height,
+        -1.0/width,0,
+        1.0/width,1.0/height,
+        -1.0/width,0,
+        1.0/width,0,
+        1.0/width,-1.0/height,
+        1.0/width,0,
+        1.0/width,1.0/height
+    };
+    
+    const float kernelValue[32]={
+        0.0625,0.0625,0.0625,0.0625,
+        0.125,0.125,0.125,0.125,
+        0.0625,0.0625,0.0625,0.0625,
+        0.125,0.125,0.125,0.125,
+        0.125,0.125,0.125,0.125,
+        0.0625,0.0625,0.0625,0.0625,
+        0.125,0.125,0.125,0.125,
+        0.0625,0.0625,0.0625,0.0625
+    };
 		
 	//for debugging
 	NSTimeInterval tinit= [[NSDate date] timeIntervalSince1970];
@@ -707,12 +630,15 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, pic);
     glUniform1i(smoothDoublePic0,1);
-    glActiveTexture(GL_TEXTURE0);
-    glUniform2f(smoothDoubleDirection, 1.0/(float)w, 0.0);
-    glUniform4fv(smoothDoubleGaussianCoeff, 15, coeffDown0);
+    glActiveTexture(GL_TEXTURE1);
+    glUniform2fv(smoothDoubleDirection, 8, offset);
+    glUniform4fv(smoothDoubleGaussianCoeff, 8, kernelValue);
     glBindFramebuffer(GL_FRAMEBUFFER, dogBuf[0][0]);
     glClear(GL_COLOR_BUFFER_BIT);
+    
+    TS(OPENGL_Gauss);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    TE(OPENGL_Gauss);
     
     glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, grayData);
     
@@ -744,9 +670,7 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
     
     [UIImageJPEGRepresentation(finalImage, 1.0)writeToFile:filename atomically:YES];
     
-    NSLog(@"save image");
-    return 0;
-	
+    NSLog(@"save image");	
 }
 
 
