@@ -219,11 +219,11 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
     glVertexAttribPointer(trackReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
     glEnableVertexAttribArray(trackReadingPosition);
     trackKeyPointsPic=glGetUniformLocation(track, "picKeyPoints");
-    trackIXPic=glGetAttribLocation(track, "picIX");
-    trackIYPic=glGetAttribLocation(track, "picIY");
-    trackDiffPic=glGetAttribLocation(track, "picDiff");
-    trackWidth=glGetAttribLocation(track, "width");
-    trackHeight=glGetAttribLocation(track, "height");
+    trackIXPic=glGetUniformLocation(track, "picIX");
+    trackIYPic=glGetUniformLocation(track, "picIY");
+    trackDiffPic=glGetUniformLocation(track, "picDiff");
+    trackWidth=glGetUniformLocation(track, "width");
+    trackHeight=glGetUniformLocation(track, "height");
     
 	// ---------------------- BUFFERS AND TEXTURES INITIALIZATION --------------------
 
@@ -642,6 +642,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sqSize, sqSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, keyPointData);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, trackKeyPointsTex, 0);
+    
     
     glViewport(0, 0, sqSize, sqSize);
     for(int i=3;i>=0;--i){
