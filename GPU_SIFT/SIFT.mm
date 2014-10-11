@@ -193,6 +193,8 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
     glEnableVertexAttribArray(spatialGradReadingPosition);
     ixPic=glGetUniformLocation(spatialGrad, "picIX");
     iyPic=glGetUniformLocation(spatialGrad, "picIY");
+    spatialGradTexelWidthOffset=glGetUniformLocation(spatialGrad, "texelOffsetWidth");
+    spatialGradTexelHeightOffset=glGetUniformLocation(spatialGrad, "texelOffsetHeight");
     
     //求b向量程序
     timeGrad=BuildProgram(@"timeGradVertex", @"timeGrad");
@@ -329,32 +331,32 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
     }
     
     //G矩阵缓存及其纹理初始化
-//    for(int i=0;i<4;++i){
-//        glGenFramebuffers(1, &spatialGradBuf[i]);
-//        glBindFramebuffer(GL_FRAMEBUFFER, spatialGradBuf[i]);
-//        glGenTextures(1, &spatialGradTex[i]);
-//        glBindTexture(GL_TEXTURE_2D, spatialGradTex[i]);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-//        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width>>i, height>>i, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-//        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, spatialGradTex[i], 0);
-//    }
+    for(int i=0;i<4;++i){
+        glGenFramebuffers(1, &spatialGradBuf[i]);
+        glBindFramebuffer(GL_FRAMEBUFFER, spatialGradBuf[i]);
+        glGenTextures(1, &spatialGradTex[i]);
+        glBindTexture(GL_TEXTURE_2D, spatialGradTex[i]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width>>i, height>>i, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, spatialGradTex[i], 0);
+    }
     
     //b向量缓存及其纹理初始化
-//    for(int i=0;i<4;++i){
-//        glGenFramebuffers(1, &timeGradBuf[i]);
-//        glBindFramebuffer(GL_FRAMEBUFFER, timeGradBuf[i]);
-//        glGenTextures(1, &timeGradTex[i]);
-//        glBindTexture(GL_TEXTURE_2D, timeGradTex[i]);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-//        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width>>i, height>>i, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-//        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, timeGradTex[i], 0);
-//    }
+    for(int i=0;i<4;++i){
+        glGenFramebuffers(1, &timeGradBuf[i]);
+        glBindFramebuffer(GL_FRAMEBUFFER, timeGradBuf[i]);
+        glGenTextures(1, &timeGradTex[i]);
+        glBindTexture(GL_TEXTURE_2D, timeGradTex[i]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width>>i, height>>i, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, timeGradTex[i], 0);
+    }
     
 	glGenFramebuffers(1, &dispBuf);
 	glBindFramebuffer(GL_FRAMEBUFFER, dispBuf);
@@ -574,43 +576,50 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         free(testPreGradientIYData);
          */
         
-        /*
+        
         //求G矩阵
-        glUseProgram(spatialGrad);
-        glVertexAttribPointer(spatialGradWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
-        glVertexAttribPointer(spatialGradReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, gradientTex[i][0]);
-        glUniform1i(ixPic, 0);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, gradientTex[i][1]);
-        glUniform1i(iyPic, 1);
-        glActiveTexture(GL_TEXTURE0);
-        glBindFramebuffer(GL_FRAMEBUFFER, spatialGradBuf[i]);
-        glClear(GL_COLOR_BUFFER_BIT);
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+//        glUseProgram(spatialGrad);
+//        glVertexAttribPointer(spatialGradWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
+//        glVertexAttribPointer(spatialGradReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
+//        glUniform1f(spatialGradTexelWidthOffset, 1.0/w);
+//        glUniform1f(spatialGradTexelHeightOffset, 1.0/h);
+//        glActiveTexture(GL_TEXTURE0);
+//        glBindTexture(GL_TEXTURE_2D, gradientTex[i][0]);
+//        glUniform1i(ixPic, 0);
+//        glActiveTexture(GL_TEXTURE1);
+//        glBindTexture(GL_TEXTURE_2D, gradientTex[i][1]);
+//        glUniform1i(iyPic, 1);
+//        glActiveTexture(GL_TEXTURE0);
+//        glBindFramebuffer(GL_FRAMEBUFFER, spatialGradBuf[i]);
+//        glClear(GL_COLOR_BUFFER_BIT);
+//        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+//        
+//        uint8_t *testSpatialGradData;
+//        testSpatialGradData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
+//        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testSpatialGradData);
+//        [self saveTestureAsFileWithBytes:testSpatialGradData width:w height:h filename:[NSString stringWithFormat:@"testSpatialGrad%d.txt",i]];
+//        free(testSpatialGradData);
         
         //求b向量
-        glUseProgram(timeGrad);
-        glVertexAttribPointer(timeGradWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
-        glVertexAttribPointer(timeGradReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D,gradientTex[i][0]);
-        glUniform1i(timeIXPic, 0);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, gradientTex[i][1]);
-        glUniform1i(timeIYPic, 1);
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, diffTex[i]);
-        glUniform1i(timeDiffPic, 2);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_FRAMEBUFFER, timeGradBuf[i]);
-        glClear(GL_COLOR_BUFFER_BIT);
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-        */
+//        glUseProgram(timeGrad);
+//        glVertexAttribPointer(timeGradWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
+//        glVertexAttribPointer(timeGradReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
+//        glActiveTexture(GL_TEXTURE0);
+//        glBindTexture(GL_TEXTURE_2D,gradientTex[i][0]);
+//        glUniform1i(timeIXPic, 0);
+//        glActiveTexture(GL_TEXTURE1);
+//        glBindTexture(GL_TEXTURE_2D, gradientTex[i][1]);
+//        glUniform1i(timeIYPic, 1);
+//        glActiveTexture(GL_TEXTURE2);
+//        glBindTexture(GL_TEXTURE_2D, diffTex[i]);
+//        glUniform1i(timeDiffPic, 2);
+//        glActiveTexture(GL_TEXTURE0);
+//        glBindTexture(GL_FRAMEBUFFER, timeGradBuf[i]);
+//        glClear(GL_COLOR_BUFFER_BIT);
+//        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        
         
     }
-    
     
     int sqSize=(int)ceil(sqrt((float)keyPointsNum));
     uint8_t *keyPointData=(uint8_t*)calloc(sqSize*sqSize*4, sizeof(uint8_t));

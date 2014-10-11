@@ -21,10 +21,6 @@ void main()
     
     highp vec2 cood=vec2(2.0*(temp.x*256.0+temp.y),2.0*(temp.z*256.0+temp.w));
     
-    //lowp vec2 lCood=vec2(cood.x*256.0/width,cood.y*256.0/height);
-    lowp vec2 lCood=vec2(0,0);
-    
-    lowp vec4 ixTemp=texture2D(picIY,lCood);
     /*
     for (int k=0; k<5; ++k) {//iteration times
         
@@ -51,6 +47,6 @@ void main()
     }
     
     cood*=vec2(width,height);*/
-    gl_FragColor=ixTemp;
+    gl_FragColor=temp;
     //gl_FragColor=vec4(floor(cood.x)/256.0,cood.x-floor(cood.x),floor(cood.y)/256.0,cood.y-floor(cood.y));
 }

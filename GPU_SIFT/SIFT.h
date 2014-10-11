@@ -35,7 +35,7 @@
 	GLuint gaussWritingPosition,gaussReadingPosition,gaussTexelWidthOffset,gaussTexelHeightOffset,gaussPic;
 	GLuint gradientWritingPosition,gradientReadingPosition,gradientTexelWidthOffset,gradientTexelHeightOffset,gradientPic;
     GLuint diffWritingPosition,diffReadingPosition,diffPic,preDiffPic;
-    GLuint spatialGradWritingPosition,spatialGradReadingPosition,ixPic,iyPic;
+    GLuint spatialGradWritingPosition,spatialGradReadingPosition,spatialGradTexelWidthOffset,spatialGradTexelHeightOffset,ixPic,iyPic;
     GLuint timeGradWritingPosition,timeGradReadingPosition,timeIXPic,timeIYPic,timeDiffPic;
     GLuint trackWritingPosition,trackReadingPosition,trackKeyPointsPic,trackIXPic,trackIYPic,trackDiffPic,trackWidth,trackHeight;
     
