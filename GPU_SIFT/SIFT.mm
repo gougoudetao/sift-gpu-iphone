@@ -448,7 +448,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         testGaussData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
         glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testGaussData);
         [self saveTextureAsImageWithBytes:testGaussData width:w height:h filename:[NSString stringWithFormat:@"gaussLevel%d.jpg",i]];
-        [self saveTestureAsFileWithBytes:testGaussData width:w height:h filename:[NSString stringWithFormat:@"gaussLevel%d.txt",i]];
+        [self saveTextureWithCoordinateAsFileWithBytes:testGaussData width:w height:h filename:[NSString stringWithFormat:@"gaussLevel%d.txt",i]];
         free(testGaussData);
         
         glUseProgram(gauss);
@@ -468,7 +468,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         testPreGaussData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
         glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testPreGaussData);
         [self saveTextureAsImageWithBytes:testPreGaussData width:w height:h filename:[NSString stringWithFormat:@"preGaussLevel%d.jpg",i]];
-        [self saveTestureAsFileWithBytes:testPreGaussData width:w height:h filename:[NSString stringWithFormat:@"preGaussLevel%d.txt",i]];
+        [self saveTextureWithCoordinateAsFileWithBytes:testPreGaussData width:w height:h filename:[NSString stringWithFormat:@"preGaussLevel%d.txt",i]];
         free(testPreGaussData);
         
         
@@ -490,7 +490,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         uint8_t *testDiffData;
         testDiffData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
         glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testDiffData);
-        [self saveTestureAsFileWithBytes:testDiffData width:w height:h filename:[NSString stringWithFormat:@"diff%d.txt",i]];
+        [self saveTextureWithCoordinateAsFileWithBytes:testDiffData width:w height:h filename:[NSString stringWithFormat:@"diff%d.txt",i]];
         free(testDiffData);
         
         
@@ -511,7 +511,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         uint8_t *testGradientIXData;
         testGradientIXData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
         glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testGradientIXData);
-        [self saveTestureAsFileWithBytes:testGradientIXData width:w height:h filename:[NSString stringWithFormat:@"gradientIX%d.txt",i]];
+        [self saveTextureWithCoordinateAsFileWithBytes:testGradientIXData width:w height:h filename:[NSString stringWithFormat:@"gradientIX%d.txt",i]];
         free(testGradientIXData);
         
         /*
@@ -531,7 +531,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         uint8_t *testPreGradientIXData;
         testPreGradientIXData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
         glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testPreGradientIXData);
-        [self saveTestureAsFileWithBytes:testPreGradientIXData width:w height:h filename:[NSString stringWithFormat:@"preGradientIX%d.txt",i]];
+        [self saveTextureWithCoordinateAsFileWithBytes:testPreGradientIXData width:w height:h filename:[NSString stringWithFormat:@"preGradientIX%d.txt",i]];
         free(testPreGradientIXData);
          */
         
@@ -552,7 +552,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         uint8_t *testGradientIYData;
         testGradientIYData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
         glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testGradientIYData);
-        [self saveTestureAsFileWithBytes:testGradientIYData width:w height:h filename:[NSString stringWithFormat:@"gradientIY%d.txt",i]];
+        [self saveTextureWithCoordinateAsFileWithBytes:testGradientIYData width:w height:h filename:[NSString stringWithFormat:@"gradientIY%d.txt",i]];
         free(testGradientIYData);
         
         /*
@@ -572,7 +572,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         uint8_t *testPreGradientIYData;
         testPreGradientIYData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
         glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testPreGradientIYData);
-        [self saveTestureAsFileWithBytes:testPreGradientIYData width:w height:h filename:[NSString stringWithFormat:@"preGradientIY%d.txt",i]];
+        [self saveTextureWithCoordinateAsFileWithBytes:testPreGradientIYData width:w height:h filename:[NSString stringWithFormat:@"preGradientIY%d.txt",i]];
         free(testPreGradientIYData);
          */
         
@@ -597,7 +597,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
 //        uint8_t *testSpatialGradData;
 //        testSpatialGradData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
 //        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testSpatialGradData);
-//        [self saveTestureAsFileWithBytes:testSpatialGradData width:w height:h filename:[NSString stringWithFormat:@"testSpatialGrad%d.txt",i]];
+//        [self saveTextureWithCoordinateAsFileWithBytes:testSpatialGradData width:w height:h filename:[NSString stringWithFormat:@"testSpatialGrad%d.txt",i]];
 //        free(testSpatialGradData);
         
         //求b向量
@@ -645,7 +645,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
     
     
     glViewport(0, 0, sqSize, sqSize);
-    for(int i=3;i>=0;--i){
+    for(int i=3;i>=3;--i){
         int w=width>>i;
         int h=height>>i;
         glUseProgram(track);
@@ -671,7 +671,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         uint8_t *testTrackData;
         testTrackData=(uint8_t*)calloc(4*sqSize*sqSize, sizeof(uint8_t));
         glReadPixels(0, 0, sqSize, sqSize, GL_RGBA, GL_UNSIGNED_BYTE, testTrackData);
-        [self saveTestureAsFileWithBytes:testTrackData width:sqSize height:sqSize filename:[NSString stringWithFormat:@"track%d.txt",i]];
+        [self saveTextureAsFileWithBytes:testTrackData width:sqSize height:sqSize filename:[NSString stringWithFormat:@"track%d.txt",i]];
         free(testTrackData);
     }
     
@@ -715,7 +715,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
     NSLog(@"save image %@",name);
 }
 
--(void)saveTestureAsFileWithBytes:(uint8_t*)data width:(int)w height:(int)h filename:(NSString*)name
+-(void)saveTextureAsFileWithBytes:(uint8_t*)data width:(int)w height:(int)h filename:(NSString*)name
 {
     using namespace std;
     ofstream ofs;
@@ -725,6 +725,25 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
     for(int j=0;j<h;++j){
         for(int i=0;i<w;++i){
             ofs<<(int)data[k]<<","<<(int)data[k+1]<<","<<(int)data[k+2]<<","<<(int)data[k+3]<<" ";
+            k+=4;
+        }
+        ofs<<endl;
+    }
+    
+    ofs.close();
+    NSLog(@"save file %@",name);
+}
+
+-(void)saveTextureWithCoordinateAsFileWithBytes:(uint8_t*)data width:(int)w height:(int)h filename:(NSString*)name
+{
+    using namespace std;
+    ofstream ofs;
+    NSString* filename=[[self applicationDocumentsDirectoryPath]stringByAppendingPathComponent:name];
+    ofs.open([filename cStringUsingEncoding:NSASCIIStringEncoding]);
+    long k=0;
+    for(int j=0;j<h;++j){
+        for(int i=0;i<w;++i){
+            ofs<<j<<","<<i<<":"<<(int)data[k]<<","<<(int)data[k+1]<<","<<(int)data[k+2]<<","<<(int)data[k+3]<<" ";
             k+=4;
         }
         ofs<<endl;

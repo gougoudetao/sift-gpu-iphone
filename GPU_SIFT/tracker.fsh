@@ -47,6 +47,6 @@ void main()
     }
     
     cood*=vec2(width,height);*/
-    gl_FragColor=temp;
+    gl_FragColor=vec4(cood.x,cood.y,texture2D(picIX,cood).x,texture2D(picIY,cood).x);
     //gl_FragColor=vec4(floor(cood.x)/256.0,cood.x-floor(cood.x),floor(cood.y)/256.0,cood.y-floor(cood.y));
 }
