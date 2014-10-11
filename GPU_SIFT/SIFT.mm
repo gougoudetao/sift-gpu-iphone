@@ -652,10 +652,10 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         glBindTexture(GL_TEXTURE_2D, trackKeyPointsTex);
         glUniform1i(trackKeyPointsPic, 0);
         glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, gaussTex[i]/*gradientTex[i][0]*/);
+        glBindTexture(GL_TEXTURE_2D, gradientTex[i][0]);
         glUniform1i(trackIXPic, 1);
         glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, gaussTex[i]/*gradientTex[i][1]*/);
+        glBindTexture(GL_TEXTURE_2D, gradientTex[i][1]);
         glUniform1i(trackIYPic, 2);
         glActiveTexture(GL_TEXTURE3);
         glBindTexture(GL_TEXTURE_2D, diffTex[i]);
