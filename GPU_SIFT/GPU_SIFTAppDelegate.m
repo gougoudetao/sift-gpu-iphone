@@ -8,12 +8,15 @@
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application
 {
-    UIImage* image=[UIImage imageNamed:@"lena.jpg"];
+    UIImage* image=[UIImage imageNamed:@"now.jpg"];
     CGImageRef picture = image.CGImage;
     
-	[glView initWithWidth:image.size.width Height:image.size.height Octaves:4];
+    UIImage* preImage=[UIImage imageNamed:@"pre.jpg"];
+    CGImageRef prePicture=preImage.CGImage;
+    
+	[glView initWithWidth:image.size.width Height:image.size.height];
 	
-	NSMutableArray * test = [glView computeSiftOnCGImage:picture];
+	[glView computeSiftOnCGImage:picture preCGImage:prePicture];
 }
 
 - (void) applicationWillResignActive:(UIApplication *)application

@@ -7,9 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3A1C9D4319CACD3D001F2F7E /* test.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3A1C9D4219CACD3D001F2F7E /* test.jpg */; };
+		3A181EFB19D3E35C006F519A /* SIFT.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A181EFA19D3E35C006F519A /* SIFT.mm */; };
+		3A181EFE19D3E3AF006F519A /* gauss.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 3A181EFC19D3E3AF006F519A /* gauss.fsh */; };
+		3A181EFF19D3E3AF006F519A /* gaussVertex.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 3A181EFD19D3E3AF006F519A /* gaussVertex.vsh */; };
 		3A2BF9A319CC0B2200A53D22 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A2BF9A219CC0B2200A53D22 /* opencv2.framework */; };
 		3A6383D719CC2714008A3E6C /* lena.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3A6383D619CC2714008A3E6C /* lena.jpg */; };
+		3A7CBC1119E131EB00279C64 /* spatialGrad.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 3A7CBC1019E131EB00279C64 /* spatialGrad.fsh */; };
+		3A7CBC1319E131FD00279C64 /* spatialGradVertex.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 3A7CBC1219E131FD00279C64 /* spatialGradVertex.vsh */; };
+		3A7CBC1519E1320D00279C64 /* timeGrad.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 3A7CBC1419E1320D00279C64 /* timeGrad.fsh */; };
+		3A7CBC1719E1321B00279C64 /* timeGradVertex.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 3A7CBC1619E1321B00279C64 /* timeGradVertex.vsh */; };
+		3AB8DC7419D6647500B4AFC4 /* now.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3AB8DC7219D6647500B4AFC4 /* now.jpg */; };
+		3AB8DC7519D6647500B4AFC4 /* pre.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3AB8DC7319D6647500B4AFC4 /* pre.jpg */; };
+		3AB8DC7719D6B28F00B4AFC4 /* diff.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 3AB8DC7619D6B28F00B4AFC4 /* diff.fsh */; };
+		3AB8DC7919D6B34300B4AFC4 /* diffVertex.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 3AB8DC7819D6B34300B4AFC4 /* diffVertex.vsh */; };
+		3ABAE07419CD53790067AF48 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ABAE07319CD53790067AF48 /* CoreImage.framework */; };
+		3AC2D2AD19E505E90016FE6F /* tracker.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 3AC2D2AB19E505E90016FE6F /* tracker.fsh */; };
+		3AC2D2B119E5163E0016FE6F /* trackerVertex.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 3AC2D2AF19E5163E0016FE6F /* trackerVertex.vsh */; };
+		3AF9D17E19D5489200571976 /* gradientVertex.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 3AF9D17D19D5489200571976 /* gradientVertex.vsh */; };
+		3AF9D18019D54ADF00571976 /* gradient.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 3AF9D17F19D54ADF00571976 /* gradient.fsh */; };
 		9CA72716142269B500CC88CA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CA72715142269B500CC88CA /* UIKit.framework */; };
 		9CA72718142269B500CC88CA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CA72717142269B500CC88CA /* Foundation.framework */; };
 		9CA7271A142269B500CC88CA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CA72719142269B500CC88CA /* CoreGraphics.framework */; };
@@ -18,30 +33,29 @@
 		9CA72727142269B500CC88CA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA72726142269B500CC88CA /* main.m */; };
 		9CA7272A142269B500CC88CA /* GPU_SIFTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA72729142269B500CC88CA /* GPU_SIFTAppDelegate.m */; };
 		9CA7275D14226AA900CC88CA /* KeyPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA7275A14226AA900CC88CA /* KeyPoint.m */; };
-		9CA7275E14226AA900CC88CA /* SIFT.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9CA7275C14226AA900CC88CA /* SIFT.mm */; };
-		9CA7278014226B0300CC88CA /* 00.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7277F14226B0300CC88CA /* 00.jpg */; };
 		9CA7278214226D2600CC88CA /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7278114226D2600CC88CA /* MainWindow.xib */; };
-		9CA7278314226E8D00CC88CA /* descriptor.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276014226AC100CC88CA /* descriptor.fsh */; };
-		9CA7278414226E8D00CC88CA /* dog.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276114226AC100CC88CA /* dog.fsh */; };
-		9CA7278514226E8D00CC88CA /* edgeSuppression.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276214226AC100CC88CA /* edgeSuppression.fsh */; };
-		9CA7278614226E8D00CC88CA /* grad.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276314226AC100CC88CA /* grad.fsh */; };
-		9CA7278714226E8D00CC88CA /* gradient.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276414226AC100CC88CA /* gradient.fsh */; };
-		9CA7278814226E8D00CC88CA /* mainOrientation.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276514226AC100CC88CA /* mainOrientation.fsh */; };
-		9CA7278914226E8D00CC88CA /* nms.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276614226AC100CC88CA /* nms.fsh */; };
-		9CA7278A14226E8D00CC88CA /* orientation.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276714226AC100CC88CA /* orientation.fsh */; };
-		9CA7278B14226E8D00CC88CA /* printer.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276814226AC100CC88CA /* printer.fsh */; };
-		9CA7278C14226E8D00CC88CA /* quickBlur.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276914226AC100CC88CA /* quickBlur.fsh */; };
-		9CA7278D14226E8D00CC88CA /* smooth.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276A14226AC100CC88CA /* smooth.fsh */; };
-		9CA7278E14226E8D00CC88CA /* smoothDouble.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276B14226AC100CC88CA /* smoothDouble.fsh */; };
-		9CA7278F14226E8D00CC88CA /* vertex.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276C14226AC100CC88CA /* vertex.vsh */; };
-		9CA7279014226E8D00CC88CA /* vertex0.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276D14226AC100CC88CA /* vertex0.vsh */; };
-		9CA7279114226E8D00CC88CA /* vertex2.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276E14226AC100CC88CA /* vertex2.vsh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		3A1C9D4219CACD3D001F2F7E /* test.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = test.jpg; sourceTree = "<group>"; };
+		3A181EF919D3E35C006F519A /* SIFT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SIFT.h; sourceTree = "<group>"; };
+		3A181EFA19D3E35C006F519A /* SIFT.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SIFT.mm; sourceTree = "<group>"; };
+		3A181EFC19D3E3AF006F519A /* gauss.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = gauss.fsh; path = Shaders/gauss.fsh; sourceTree = "<group>"; };
+		3A181EFD19D3E3AF006F519A /* gaussVertex.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = gaussVertex.vsh; path = Shaders/gaussVertex.vsh; sourceTree = "<group>"; };
 		3A2BF9A219CC0B2200A53D22 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = ../../Documents/Projects/iOS/opencv2.framework; sourceTree = "<group>"; };
 		3A6383D619CC2714008A3E6C /* lena.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = lena.jpg; sourceTree = "<group>"; };
+		3A7CBC1019E131EB00279C64 /* spatialGrad.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = spatialGrad.fsh; sourceTree = "<group>"; };
+		3A7CBC1219E131FD00279C64 /* spatialGradVertex.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = spatialGradVertex.vsh; sourceTree = "<group>"; };
+		3A7CBC1419E1320D00279C64 /* timeGrad.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = timeGrad.fsh; sourceTree = "<group>"; };
+		3A7CBC1619E1321B00279C64 /* timeGradVertex.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = timeGradVertex.vsh; sourceTree = "<group>"; };
+		3AB8DC7219D6647500B4AFC4 /* now.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = now.jpg; sourceTree = "<group>"; };
+		3AB8DC7319D6647500B4AFC4 /* pre.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = pre.jpg; sourceTree = "<group>"; };
+		3AB8DC7619D6B28F00B4AFC4 /* diff.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = diff.fsh; sourceTree = "<group>"; };
+		3AB8DC7819D6B34300B4AFC4 /* diffVertex.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = diffVertex.vsh; sourceTree = "<group>"; };
+		3ABAE07319CD53790067AF48 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
+		3AC2D2AB19E505E90016FE6F /* tracker.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = tracker.fsh; sourceTree = "<group>"; };
+		3AC2D2AF19E5163E0016FE6F /* trackerVertex.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = trackerVertex.vsh; sourceTree = "<group>"; };
+		3AF9D17D19D5489200571976 /* gradientVertex.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = gradientVertex.vsh; sourceTree = "<group>"; };
+		3AF9D17F19D54ADF00571976 /* gradient.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = gradient.fsh; sourceTree = "<group>"; };
 		9CA72711142269B500CC88CA /* GPU_SIFT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GPU_SIFT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CA72715142269B500CC88CA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		9CA72717142269B500CC88CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -55,24 +69,6 @@
 		9CA72729142269B500CC88CA /* GPU_SIFTAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPU_SIFTAppDelegate.m; sourceTree = "<group>"; };
 		9CA7275914226AA900CC88CA /* KeyPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyPoint.h; sourceTree = "<group>"; };
 		9CA7275A14226AA900CC88CA /* KeyPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyPoint.m; sourceTree = "<group>"; };
-		9CA7275B14226AA900CC88CA /* SIFT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SIFT.h; sourceTree = "<group>"; };
-		9CA7275C14226AA900CC88CA /* SIFT.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SIFT.mm; sourceTree = "<group>"; };
-		9CA7276014226AC100CC88CA /* descriptor.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = descriptor.fsh; path = Shaders/descriptor.fsh; sourceTree = "<group>"; };
-		9CA7276114226AC100CC88CA /* dog.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = dog.fsh; path = Shaders/dog.fsh; sourceTree = "<group>"; };
-		9CA7276214226AC100CC88CA /* edgeSuppression.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = edgeSuppression.fsh; path = Shaders/edgeSuppression.fsh; sourceTree = "<group>"; };
-		9CA7276314226AC100CC88CA /* grad.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = grad.fsh; path = Shaders/grad.fsh; sourceTree = "<group>"; };
-		9CA7276414226AC100CC88CA /* gradient.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = gradient.fsh; path = Shaders/gradient.fsh; sourceTree = "<group>"; };
-		9CA7276514226AC100CC88CA /* mainOrientation.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = mainOrientation.fsh; path = Shaders/mainOrientation.fsh; sourceTree = "<group>"; };
-		9CA7276614226AC100CC88CA /* nms.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = nms.fsh; path = Shaders/nms.fsh; sourceTree = "<group>"; };
-		9CA7276714226AC100CC88CA /* orientation.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = orientation.fsh; path = Shaders/orientation.fsh; sourceTree = "<group>"; };
-		9CA7276814226AC100CC88CA /* printer.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = printer.fsh; path = Shaders/printer.fsh; sourceTree = "<group>"; };
-		9CA7276914226AC100CC88CA /* quickBlur.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = quickBlur.fsh; path = Shaders/quickBlur.fsh; sourceTree = "<group>"; };
-		9CA7276A14226AC100CC88CA /* smooth.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = smooth.fsh; path = Shaders/smooth.fsh; sourceTree = "<group>"; };
-		9CA7276B14226AC100CC88CA /* smoothDouble.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = smoothDouble.fsh; path = Shaders/smoothDouble.fsh; sourceTree = "<group>"; };
-		9CA7276C14226AC100CC88CA /* vertex.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = vertex.vsh; path = Shaders/vertex.vsh; sourceTree = "<group>"; };
-		9CA7276D14226AC100CC88CA /* vertex0.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = vertex0.vsh; path = Shaders/vertex0.vsh; sourceTree = "<group>"; };
-		9CA7276E14226AC100CC88CA /* vertex2.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = vertex2.vsh; path = Shaders/vertex2.vsh; sourceTree = "<group>"; };
-		9CA7277F14226B0300CC88CA /* 00.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 00.jpg; sourceTree = "<group>"; };
 		9CA7278114226D2600CC88CA /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -81,6 +77,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3ABAE07419CD53790067AF48 /* CoreImage.framework in Frameworks */,
 				3A2BF9A319CC0B2200A53D22 /* opencv2.framework in Frameworks */,
 				9CA72716142269B500CC88CA /* UIKit.framework in Frameworks */,
 				9CA72718142269B500CC88CA /* Foundation.framework in Frameworks */,
@@ -113,6 +110,7 @@
 		9CA72714142269B500CC88CA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3ABAE07319CD53790067AF48 /* CoreImage.framework */,
 				3A2BF9A219CC0B2200A53D22 /* opencv2.framework */,
 				9CA72715142269B500CC88CA /* UIKit.framework */,
 				9CA72717142269B500CC88CA /* Foundation.framework */,
@@ -130,8 +128,8 @@
 				9CA7275F14226AB000CC88CA /* Shaders */,
 				9CA7275914226AA900CC88CA /* KeyPoint.h */,
 				9CA7275A14226AA900CC88CA /* KeyPoint.m */,
-				9CA7275B14226AA900CC88CA /* SIFT.h */,
-				9CA7275C14226AA900CC88CA /* SIFT.mm */,
+				3A181EF919D3E35C006F519A /* SIFT.h */,
+				3A181EFA19D3E35C006F519A /* SIFT.mm */,
 				9CA72728142269B500CC88CA /* GPU_SIFTAppDelegate.h */,
 				9CA72729142269B500CC88CA /* GPU_SIFTAppDelegate.m */,
 				9CA72720142269B500CC88CA /* Supporting Files */,
@@ -153,21 +151,18 @@
 		9CA7275F14226AB000CC88CA /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
-				9CA7276014226AC100CC88CA /* descriptor.fsh */,
-				9CA7276114226AC100CC88CA /* dog.fsh */,
-				9CA7276214226AC100CC88CA /* edgeSuppression.fsh */,
-				9CA7276314226AC100CC88CA /* grad.fsh */,
-				9CA7276414226AC100CC88CA /* gradient.fsh */,
-				9CA7276514226AC100CC88CA /* mainOrientation.fsh */,
-				9CA7276614226AC100CC88CA /* nms.fsh */,
-				9CA7276714226AC100CC88CA /* orientation.fsh */,
-				9CA7276814226AC100CC88CA /* printer.fsh */,
-				9CA7276914226AC100CC88CA /* quickBlur.fsh */,
-				9CA7276A14226AC100CC88CA /* smooth.fsh */,
-				9CA7276B14226AC100CC88CA /* smoothDouble.fsh */,
-				9CA7276C14226AC100CC88CA /* vertex.vsh */,
-				9CA7276D14226AC100CC88CA /* vertex0.vsh */,
-				9CA7276E14226AC100CC88CA /* vertex2.vsh */,
+				3A181EFC19D3E3AF006F519A /* gauss.fsh */,
+				3A181EFD19D3E3AF006F519A /* gaussVertex.vsh */,
+				3AF9D17D19D5489200571976 /* gradientVertex.vsh */,
+				3AF9D17F19D54ADF00571976 /* gradient.fsh */,
+				3AB8DC7619D6B28F00B4AFC4 /* diff.fsh */,
+				3AB8DC7819D6B34300B4AFC4 /* diffVertex.vsh */,
+				3A7CBC1019E131EB00279C64 /* spatialGrad.fsh */,
+				3A7CBC1219E131FD00279C64 /* spatialGradVertex.vsh */,
+				3A7CBC1419E1320D00279C64 /* timeGrad.fsh */,
+				3A7CBC1619E1321B00279C64 /* timeGradVertex.vsh */,
+				3AC2D2AB19E505E90016FE6F /* tracker.fsh */,
+				3AC2D2AF19E5163E0016FE6F /* trackerVertex.vsh */,
 			);
 			name = Shaders;
 			sourceTree = "<group>";
@@ -175,9 +170,9 @@
 		9CA7277E14226AD400CC88CA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3AB8DC7219D6647500B4AFC4 /* now.jpg */,
+				3AB8DC7319D6647500B4AFC4 /* pre.jpg */,
 				3A6383D619CC2714008A3E6C /* lena.jpg */,
-				3A1C9D4219CACD3D001F2F7E /* test.jpg */,
-				9CA7277F14226B0300CC88CA /* 00.jpg */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -231,24 +226,21 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9CA7278314226E8D00CC88CA /* descriptor.fsh in Resources */,
-				9CA7278414226E8D00CC88CA /* dog.fsh in Resources */,
-				9CA7278514226E8D00CC88CA /* edgeSuppression.fsh in Resources */,
-				9CA7278614226E8D00CC88CA /* grad.fsh in Resources */,
-				9CA7278714226E8D00CC88CA /* gradient.fsh in Resources */,
-				9CA7278814226E8D00CC88CA /* mainOrientation.fsh in Resources */,
-				9CA7278914226E8D00CC88CA /* nms.fsh in Resources */,
 				3A6383D719CC2714008A3E6C /* lena.jpg in Resources */,
-				9CA7278A14226E8D00CC88CA /* orientation.fsh in Resources */,
-				9CA7278B14226E8D00CC88CA /* printer.fsh in Resources */,
-				9CA7278C14226E8D00CC88CA /* quickBlur.fsh in Resources */,
-				9CA7278D14226E8D00CC88CA /* smooth.fsh in Resources */,
-				9CA7278E14226E8D00CC88CA /* smoothDouble.fsh in Resources */,
-				9CA7278F14226E8D00CC88CA /* vertex.vsh in Resources */,
-				3A1C9D4319CACD3D001F2F7E /* test.jpg in Resources */,
-				9CA7279014226E8D00CC88CA /* vertex0.vsh in Resources */,
-				9CA7279114226E8D00CC88CA /* vertex2.vsh in Resources */,
-				9CA7278014226B0300CC88CA /* 00.jpg in Resources */,
+				3A181EFF19D3E3AF006F519A /* gaussVertex.vsh in Resources */,
+				3A7CBC1319E131FD00279C64 /* spatialGradVertex.vsh in Resources */,
+				3A181EFE19D3E3AF006F519A /* gauss.fsh in Resources */,
+				3A7CBC1519E1320D00279C64 /* timeGrad.fsh in Resources */,
+				3AF9D17E19D5489200571976 /* gradientVertex.vsh in Resources */,
+				3AB8DC7719D6B28F00B4AFC4 /* diff.fsh in Resources */,
+				3AF9D18019D54ADF00571976 /* gradient.fsh in Resources */,
+				3AC2D2AD19E505E90016FE6F /* tracker.fsh in Resources */,
+				3AB8DC7919D6B34300B4AFC4 /* diffVertex.vsh in Resources */,
+				3AC2D2B119E5163E0016FE6F /* trackerVertex.vsh in Resources */,
+				3AB8DC7519D6647500B4AFC4 /* pre.jpg in Resources */,
+				3A7CBC1719E1321B00279C64 /* timeGradVertex.vsh in Resources */,
+				3AB8DC7419D6647500B4AFC4 /* now.jpg in Resources */,
+				3A7CBC1119E131EB00279C64 /* spatialGrad.fsh in Resources */,
 				9CA7278214226D2600CC88CA /* MainWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -261,9 +253,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				9CA72727142269B500CC88CA /* main.m in Sources */,
+				3A181EFB19D3E35C006F519A /* SIFT.mm in Sources */,
 				9CA7272A142269B500CC88CA /* GPU_SIFTAppDelegate.m in Sources */,
 				9CA7275D14226AA900CC88CA /* KeyPoint.m in Sources */,
-				9CA7275E14226AA900CC88CA /* SIFT.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
