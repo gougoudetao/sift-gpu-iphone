@@ -634,6 +634,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sqSize, sqSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, keyPointData);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, trackKeyPointsTex, 0);
     
+    
     glViewport(0, 0, sqSize, sqSize);
     for(int i=3;i>=0;--i){
         int w=width>>i;
