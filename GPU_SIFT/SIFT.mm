@@ -444,12 +444,12 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         
         //读取纹理到图片并显示
-//        uint8_t *testGaussData;
-//        testGaussData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
-//        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testGaussData);
-//        [self saveTextureAsImageWithBytes:testGaussData width:w height:h filename:[NSString stringWithFormat:@"gaussLevel%d.jpg",i]];
-//        [self saveTestureAsFileWithBytes:testGaussData width:w height:h filename:[NSString stringWithFormat:@"gaussLevel%d.txt",i]];
-//        free(testGaussData);
+        uint8_t *testGaussData;
+        testGaussData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
+        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testGaussData);
+        [self saveTextureAsImageWithBytes:testGaussData width:w height:h filename:[NSString stringWithFormat:@"gaussLevel%d.jpg",i]];
+        [self saveTestureAsFileWithBytes:testGaussData width:w height:h filename:[NSString stringWithFormat:@"gaussLevel%d.txt",i]];
+        free(testGaussData);
         
         glUseProgram(gauss);
         glVertexAttribPointer(gaussWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
@@ -464,12 +464,12 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         
         //读取纹理到图片并显示
-//        uint8_t *testPreGaussData;
-//        testPreGaussData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
-//        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testPreGaussData);
-//        [self saveTextureAsImageWithBytes:testPreGaussData width:w height:h filename:[NSString stringWithFormat:@"preGaussLevel%d.jpg",i]];
-//        [self saveTestureAsFileWithBytes:testPreGaussData width:w height:h filename:[NSString stringWithFormat:@"preGaussLevel%d.txt",i]];
-//        free(testPreGaussData);
+        uint8_t *testPreGaussData;
+        testPreGaussData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
+        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testPreGaussData);
+        [self saveTextureAsImageWithBytes:testPreGaussData width:w height:h filename:[NSString stringWithFormat:@"preGaussLevel%d.jpg",i]];
+        [self saveTestureAsFileWithBytes:testPreGaussData width:w height:h filename:[NSString stringWithFormat:@"preGaussLevel%d.txt",i]];
+        free(testPreGaussData);
         
         
         //求差分图像
