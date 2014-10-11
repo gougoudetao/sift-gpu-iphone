@@ -217,11 +217,11 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
     glVertexAttribPointer(trackReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
     glEnableVertexAttribArray(trackReadingPosition);
     trackKeyPointsPic=glGetUniformLocation(track, "picKeyPoints");
-    trackIXPic=glGetAttribLocation(track, "picIX");
-    trackIYPic=glGetAttribLocation(track, "picIY");
-    trackDiffPic=glGetAttribLocation(track, "picDiff");
-    trackWidth=glGetAttribLocation(track, "width");
-    trackHeight=glGetAttribLocation(track, "height");
+    trackIXPic=glGetUniformLocation(track, "picIX");
+    trackIYPic=glGetUniformLocation(track, "picIY");
+    trackDiffPic=glGetUniformLocation(track, "picDiff");
+    trackWidth=glGetUniformLocation(track, "width");
+    trackHeight=glGetUniformLocation(track, "height");
     
 	// ---------------------- BUFFERS AND TEXTURES INITIALIZATION --------------------
 
@@ -644,10 +644,10 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         glBindTexture(GL_TEXTURE_2D, trackKeyPointsTex);
         glUniform1i(trackKeyPointsPic, 0);
         glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, gaussTex[i]/*gradientTex[i][0]*/);
+        glBindTexture(GL_TEXTURE_2D, gradientTex[i][0]);
         glUniform1i(trackIXPic, 1);
         glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, gaussTex[i]/*gradientTex[i][1]*/);
+        glBindTexture(GL_TEXTURE_2D, gradientTex[i][1]);
         glUniform1i(trackIYPic, 2);
         glActiveTexture(GL_TEXTURE3);
         glBindTexture(GL_TEXTURE_2D, diffTex[i]);
