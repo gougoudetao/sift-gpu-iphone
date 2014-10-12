@@ -182,33 +182,6 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
     diffPic=glGetUniformLocation(diff, "inputImageTexture");
     preDiffPic=glGetUniformLocation(diff, "preInputImageTexture");
     
-    //求G矩阵程序
-    spatialGrad=BuildProgram(@"spatialGradVertex", @"spatialGrad");
-    glUseProgram(spatialGrad);
-    spatialGradWritingPosition=glGetAttribLocation(spatialGrad, "writingPosition");
-    glVertexAttribPointer(spatialGradWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
-    glEnableVertexAttribArray(spatialGradWritingPosition);
-    spatialGradReadingPosition=glGetAttribLocation(spatialGrad, "readingPosition");
-    glVertexAttribPointer(spatialGradReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
-    glEnableVertexAttribArray(spatialGradReadingPosition);
-    ixPic=glGetUniformLocation(spatialGrad, "picIX");
-    iyPic=glGetUniformLocation(spatialGrad, "picIY");
-    spatialGradTexelWidthOffset=glGetUniformLocation(spatialGrad, "texelOffsetWidth");
-    spatialGradTexelHeightOffset=glGetUniformLocation(spatialGrad, "texelOffsetHeight");
-    
-    //求b向量程序
-    timeGrad=BuildProgram(@"timeGradVertex", @"timeGrad");
-    glUseProgram(timeGrad);
-    timeGradWritingPosition=glGetAttribLocation(timeGrad, "writingPosition");
-    glVertexAttribPointer(timeGradWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
-    glEnableVertexAttribArray(timeGradWritingPosition);
-    timeGradReadingPosition=glGetAttribLocation(timeGrad, "readingPosition");
-    glVertexAttribPointer(timeGradReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
-    glEnableVertexAttribArray(timeGradReadingPosition);
-    timeIXPic=glGetUniformLocation(timeGrad, "picIX");
-    timeIYPic=glGetUniformLocation(timeGrad, "picIY");
-    timeDiffPic=glGetUniformLocation(timeGrad, "picDiff");
-    
     //追踪程序
     track=BuildProgram(@"trackerVertex", @"tracker");
     glUseProgram(track);
@@ -306,56 +279,6 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width>>i, height>>i, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gradientTex[i][1], 0);
-        
-        glGenFramebuffers(1,&preGradientBuf[i][0]);
-        glBindFramebuffer(GL_FRAMEBUFFER, preGradientBuf[i][0]);
-        glGenTextures(1, &preGradientTex[i][0]);
-        glBindTexture(GL_TEXTURE_2D, preGradientTex[i][0]);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width>>i, height>>i, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, preGradientTex[i][0], 0);
-        
-        glGenFramebuffers(1,&preGradientBuf[i][1]);
-        glBindFramebuffer(GL_FRAMEBUFFER, preGradientBuf[i][1]);
-        glGenTextures(1, &preGradientTex[i][1]);
-        glBindTexture(GL_TEXTURE_2D, preGradientTex[i][1]);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width>>i, height>>i, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, preGradientTex[i][1], 0);
-    }
-    
-    //G矩阵缓存及其纹理初始化
-    for(int i=0;i<4;++i){
-        glGenFramebuffers(1, &spatialGradBuf[i]);
-        glBindFramebuffer(GL_FRAMEBUFFER, spatialGradBuf[i]);
-        glGenTextures(1, &spatialGradTex[i]);
-        glBindTexture(GL_TEXTURE_2D, spatialGradTex[i]);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width>>i, height>>i, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, spatialGradTex[i], 0);
-    }
-    
-    //b向量缓存及其纹理初始化
-    for(int i=0;i<4;++i){
-        glGenFramebuffers(1, &timeGradBuf[i]);
-        glBindFramebuffer(GL_FRAMEBUFFER, timeGradBuf[i]);
-        glGenTextures(1, &timeGradTex[i]);
-        glBindTexture(GL_TEXTURE_2D, timeGradTex[i]);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width>>i, height>>i, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, timeGradTex[i], 0);
     }
     
 	glGenFramebuffers(1, &dispBuf);
@@ -449,7 +372,6 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testGaussData);
         [self saveTextureAsImageWithBytes:testGaussData width:w height:h filename:[NSString stringWithFormat:@"gaussLevel%d.jpg",i]];
         [self saveTextureWithCoordinateAsFileWithBytes:testGaussData width:w height:h filename:[NSString stringWithFormat:@"gaussLevel%d.txt",i]];
-        free(testGaussData);
         
         glUseProgram(gauss);
         glVertexAttribPointer(gaussWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
@@ -469,7 +391,6 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testPreGaussData);
         [self saveTextureAsImageWithBytes:testPreGaussData width:w height:h filename:[NSString stringWithFormat:@"preGaussLevel%d.jpg",i]];
         [self saveTextureWithCoordinateAsFileWithBytes:testPreGaussData width:w height:h filename:[NSString stringWithFormat:@"preGaussLevel%d.txt",i]];
-        free(testPreGaussData);
         
         
         //求差分图像
@@ -491,7 +412,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         testDiffData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
         glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testDiffData);
         [self saveTextureWithCoordinateAsFileWithBytes:testDiffData width:w height:h filename:[NSString stringWithFormat:@"diff%d.txt",i]];
-        free(testDiffData);
+        
         
         
         //求IX
@@ -512,28 +433,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         testGradientIXData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
         glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testGradientIXData);
         [self saveTextureWithCoordinateAsFileWithBytes:testGradientIXData width:w height:h filename:[NSString stringWithFormat:@"gradientIX%d.txt",i]];
-        free(testGradientIXData);
         
-        /*
-        glUseProgram(gradient);
-        glVertexAttribPointer(gradientWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
-        glVertexAttribPointer(gradientReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
-        glUniform1f(gradientTexelWidthOffset, 1.0/w);
-        glUniform1f(gradientTexelHeightOffset, 0);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, gaussTex[i]);
-        glUniform1i(gradientPic, 0);
-        glActiveTexture(GL_TEXTURE0);
-        glBindFramebuffer(GL_FRAMEBUFFER, preGradientBuf[i][0]);
-        glClear(GL_COLOR_BUFFER_BIT);
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-        
-        uint8_t *testPreGradientIXData;
-        testPreGradientIXData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
-        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testPreGradientIXData);
-        [self saveTextureWithCoordinateAsFileWithBytes:testPreGradientIXData width:w height:h filename:[NSString stringWithFormat:@"preGradientIX%d.txt",i]];
-        free(testPreGradientIXData);
-         */
         
         //求IY
         glUseProgram(gradient);
@@ -553,72 +453,14 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         testGradientIYData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
         glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testGradientIYData);
         [self saveTextureWithCoordinateAsFileWithBytes:testGradientIYData width:w height:h filename:[NSString stringWithFormat:@"gradientIY%d.txt",i]];
+        
+        
+        //清理申请变量
+        free(testGaussData);
+        free(testPreGaussData);
+        free(testDiffData);
+        free(testGradientIXData);
         free(testGradientIYData);
-        
-        /*
-        glUseProgram(gradient);
-        glVertexAttribPointer(gradientWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
-        glVertexAttribPointer(gradientReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
-        glUniform1f(gradientTexelWidthOffset, 0);
-        glUniform1f(gradientTexelHeightOffset,1.0/h);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, gaussTex[i]);
-        glUniform1i(gradientPic, 0);
-        glActiveTexture(GL_TEXTURE0);
-        glBindFramebuffer(GL_FRAMEBUFFER, preGradientBuf[i][1]);
-        glClear(GL_COLOR_BUFFER_BIT);
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-        
-        uint8_t *testPreGradientIYData;
-        testPreGradientIYData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
-        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testPreGradientIYData);
-        [self saveTextureWithCoordinateAsFileWithBytes:testPreGradientIYData width:w height:h filename:[NSString stringWithFormat:@"preGradientIY%d.txt",i]];
-        free(testPreGradientIYData);
-         */
-        
-        
-        //求G矩阵
-//        glUseProgram(spatialGrad);
-//        glVertexAttribPointer(spatialGradWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
-//        glVertexAttribPointer(spatialGradReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
-//        glUniform1f(spatialGradTexelWidthOffset, 1.0/w);
-//        glUniform1f(spatialGradTexelHeightOffset, 1.0/h);
-//        glActiveTexture(GL_TEXTURE0);
-//        glBindTexture(GL_TEXTURE_2D, gradientTex[i][0]);
-//        glUniform1i(ixPic, 0);
-//        glActiveTexture(GL_TEXTURE1);
-//        glBindTexture(GL_TEXTURE_2D, gradientTex[i][1]);
-//        glUniform1i(iyPic, 1);
-//        glActiveTexture(GL_TEXTURE0);
-//        glBindFramebuffer(GL_FRAMEBUFFER, spatialGradBuf[i]);
-//        glClear(GL_COLOR_BUFFER_BIT);
-//        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-//        
-//        uint8_t *testSpatialGradData;
-//        testSpatialGradData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
-//        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testSpatialGradData);
-//        [self saveTextureWithCoordinateAsFileWithBytes:testSpatialGradData width:w height:h filename:[NSString stringWithFormat:@"testSpatialGrad%d.txt",i]];
-//        free(testSpatialGradData);
-        
-        //求b向量
-//        glUseProgram(timeGrad);
-//        glVertexAttribPointer(timeGradWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
-//        glVertexAttribPointer(timeGradReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
-//        glActiveTexture(GL_TEXTURE0);
-//        glBindTexture(GL_TEXTURE_2D,gradientTex[i][0]);
-//        glUniform1i(timeIXPic, 0);
-//        glActiveTexture(GL_TEXTURE1);
-//        glBindTexture(GL_TEXTURE_2D, gradientTex[i][1]);
-//        glUniform1i(timeIYPic, 1);
-//        glActiveTexture(GL_TEXTURE2);
-//        glBindTexture(GL_TEXTURE_2D, diffTex[i]);
-//        glUniform1i(timeDiffPic, 2);
-//        glActiveTexture(GL_TEXTURE0);
-//        glBindTexture(GL_FRAMEBUFFER, timeGradBuf[i]);
-//        glClear(GL_COLOR_BUFFER_BIT);
-//        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-        
-        
     }
     
     int sqSize=(int)ceil(sqrt((float)keyPointsNum));
@@ -681,6 +523,20 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
     
 }
 
+-(float)getNeriborsSumWithBytes:(uint8_t*)data xCoord:(int)x yCoord:(int)y width:(int)w height:(int)h
+{
+    float sum=0.0005;
+    for(int i=-10;i<11;++i){
+        for(int j=-10;j<11;++j){
+            int tempX=x+i;
+            int tempY=y+j;
+            long k=tempX*width+tempY;
+            sum+=(int)data[4*k];
+        }
+    }
+    
+    return sum;
+}
 
 -(void)saveTextureAsImageWithBytes:(uint8_t*)data width:(int)w height:(int)h filename:(NSString*)name
 {

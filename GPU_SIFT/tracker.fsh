@@ -17,36 +17,36 @@ void main()
     
     highp vec2 offset=vec2(1.0/width,1.0/height);
     
-    highp vec4 temp=texture2D(picKeyPoints,coordinate);
+    highp vec4 content=texture2D(picKeyPoints,coordinate);//取得坐标点组成纹理内容
     
-    highp vec2 cood=vec2(2.0*(temp.x*256.0+temp.y),2.0*(temp.z*256.0+temp.w));
+    highp vec2 cood=vec2(2.0*(content.x*256.0+content.y),2.0*(content.z*256.0+content.w));//将纹理内容解释成图像坐标
     
-    /*
-    for (int k=0; k<5; ++k) {//iteration times
+    highp vec2 textureCood=vec2(cood.y*256.0,cood.x*256.0)*offset;//将图像坐标转化成纹理坐标，我不知道抽什么风这里坐标x和y是相反的！
+    
+    
+    //for (int k=0; k<5; ++k) {//iteration times}
         
-        for(int i=-10;i<11;++i){
-            for(int j=-10;j<11;++j){
-                highp vec2 tempCoord=cood+offset*vec2(i,j);
-                highp vec4 tempIX=texture2D(picIX,tempCoord);
-                highp vec4 tempIY=texture2D(picIY,tempCoord);
-                highp vec4 tempI=texture2D(picDiff,tempCoord);
-                
-                iixSum+=(tempI.x-0.5)*(tempIX.x-0.5);
-                iiySum+=(tempI.x-0.5)*(tempIY.x-0.5);
-                ixiySum+=(tempIX.x-0.5)*(tempIY.x-0.5);
-                ixixSum+=(tempIX.x-0.5)*(tempIX.x-0.5);
-                iyiySum+=(tempIY.x-0.5)*(tempIY.x-0.5);
-            }
+    for(int i=-10;i<11;++i){
+        for(int j=-10;j<11;++j){
+            highp vec2 tempCoord=textureCood+offset*vec2(j,i);//纹理坐标
+            highp float tempIX=(texture2D(picIX,tempCoord).x-0.5)*256.0;//像素值
+            highp float tempIY=(texture2D(picIY,tempCoord).x-0.5)*256.0;
+            highp float tempI=(texture2D(picDiff,tempCoord).x-0.5)*256.0;
+            
+            iixSum+=tempI*tempIX;
+            iiySum+=tempI*tempIY;
+            ixiySum+=tempIX*tempIY;
+            ixixSum+=tempIX*tempIX;
+            iyiySum+=tempIY*tempIY;
         }
-        
-        highp float A=ixixSum*iyiySum-ixiySum*ixiySum;
-        highp float deltaWidth=(iyiySum*iixSum-ixiySum*iiySum)/A;
-        highp float deltaHeight=(ixixSum*iiySum-ixiySum*iixSum)/A;
-        
-        cood+=vec2(deltaWidth,deltaHeight);
     }
     
-    cood*=vec2(width,height);*/
-    gl_FragColor=vec4(cood.x,cood.y,texture2D(picIX,cood).x,texture2D(picIY,cood).x);
-    //gl_FragColor=vec4(floor(cood.x)/256.0,cood.x-floor(cood.x),floor(cood.y)/256.0,cood.y-floor(cood.y));
+    highp float A=ixixSum*iyiySum-ixiySum*ixiySum;
+    highp float deltaWidth=(iyiySum*iixSum-ixiySum*iiySum)/A;//像素值
+    highp float deltaHeight=(ixixSum*iiySum-ixiySum*iixSum)/A;//像素值
+    
+    //cood+=vec2(deltaWidth,deltaHeight);
+        
+        
+    gl_FragColor=vec4(cood.x,cood.y,deltaWidth/256.0,deltaHeight/256.0);
 }
