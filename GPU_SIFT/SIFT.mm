@@ -248,8 +248,8 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
         glBindFramebuffer(GL_FRAMEBUFFER, diffBuf[i]);
         glGenTextures(1, &diffTex[i]);
         glBindTexture(GL_TEXTURE_2D, diffTex[i]);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width>>i, height>>i, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
@@ -262,8 +262,8 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
         glBindFramebuffer(GL_FRAMEBUFFER, gradientBuf[i][0]);
         glGenTextures(1, &gradientTex[i][0]);
         glBindTexture(GL_TEXTURE_2D, gradientTex[i][0]);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width>>i, height>>i, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
@@ -273,8 +273,8 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
         glBindFramebuffer(GL_FRAMEBUFFER, gradientBuf[i][1]);
         glGenTextures(1, &gradientTex[i][1]);
         glBindTexture(GL_TEXTURE_2D, gradientTex[i][1]);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width>>i, height>>i, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
@@ -367,11 +367,11 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         
         //读取纹理到图片并显示
-        uint8_t *testGaussData;
-        testGaussData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
-        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testGaussData);
-        [self saveTextureAsImageWithBytes:testGaussData width:w height:h filename:[NSString stringWithFormat:@"gaussLevel%d.jpg",i]];
-        [self saveTextureWithCoordinateAsFileWithBytes:testGaussData width:w height:h filename:[NSString stringWithFormat:@"gaussLevel%d.txt",i]];
+//        uint8_t *testGaussData;
+//        testGaussData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
+//        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testGaussData);
+//        [self saveTextureAsImageWithBytes:testGaussData width:w height:h filename:[NSString stringWithFormat:@"gaussLevel%d.jpg",i]];
+//        [self saveTextureWithCoordinateAsFileWithBytes:testGaussData width:w height:h filename:[NSString stringWithFormat:@"gaussLevel%d.txt",i]];
         
         glUseProgram(gauss);
         glVertexAttribPointer(gaussWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
@@ -386,11 +386,11 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         
         //读取纹理到图片并显示
-        uint8_t *testPreGaussData;
-        testPreGaussData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
-        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testPreGaussData);
-        [self saveTextureAsImageWithBytes:testPreGaussData width:w height:h filename:[NSString stringWithFormat:@"preGaussLevel%d.jpg",i]];
-        [self saveTextureWithCoordinateAsFileWithBytes:testPreGaussData width:w height:h filename:[NSString stringWithFormat:@"preGaussLevel%d.txt",i]];
+//        uint8_t *testPreGaussData;
+//        testPreGaussData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
+//        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testPreGaussData);
+//        [self saveTextureAsImageWithBytes:testPreGaussData width:w height:h filename:[NSString stringWithFormat:@"preGaussLevel%d.jpg",i]];
+//        [self saveTextureWithCoordinateAsFileWithBytes:testPreGaussData width:w height:h filename:[NSString stringWithFormat:@"preGaussLevel%d.txt",i]];
         
         
         //求差分图像
@@ -455,9 +455,13 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         [self saveTextureWithCoordinateAsFileWithBytes:testGradientIYData width:w height:h filename:[NSString stringWithFormat:@"gradientIY%d.txt",i]];
         
         
+        if(i==2){
+            [self computeVelocityWithDiffdata:testDiffData IXData:testGradientIXData IYData:testGradientIYData xCoord:38 yCoord:58 width:w height:h];
+        }
+        
         //清理申请变量
-        free(testGaussData);
-        free(testPreGaussData);
+        //free(testGaussData);
+        //free(testPreGaussData);
         free(testDiffData);
         free(testGradientIXData);
         free(testGradientIYData);
@@ -478,8 +482,8 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
     glBindFramebuffer(GL_FRAMEBUFFER, trackkeyPointsBuf);
     glGenTextures(1, &trackKeyPointsTex);
     glBindTexture(GL_TEXTURE_2D, trackKeyPointsTex);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sqSize, sqSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, keyPointData);
@@ -487,7 +491,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
     
     
     glViewport(0, 0, sqSize, sqSize);
-    for(int i=3;i>=3;--i){
+    for(int i=3;i>=0;--i){
         int w=width>>i;
         int h=height>>i;
         glUseProgram(track);
@@ -523,19 +527,52 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
     
 }
 
--(float)getNeriborsSumWithBytes:(uint8_t*)data xCoord:(int)x yCoord:(int)y width:(int)w height:(int)h
+-(void)computeVelocityWithDiffdata:(uint8_t*)diff IXData:(uint8_t*)IX IYData:(uint8_t*)IY xCoord:(int)x yCoord:(int)y width:(int)w height:(int)h
 {
-    float sum=0.0005;
-    for(int i=-10;i<11;++i){
-        for(int j=-10;j<11;++j){
-            int tempX=x+i;
-            int tempY=y+j;
-            long k=tempX*width+tempY;
-            sum+=(int)data[4*k];
+    int coordX=x;
+    int coordY=y;
+    
+    double iixSum=0.005;//IIX
+    double iiySum=0.005;//IIY
+    double ixiySum=0.005;//IXIY
+    double ixixSum=0.005;//IXIX
+    double iyiySum=0.005;//IYIY
+    
+    double u,v;
+    for(int k=4;k<5;++k){//迭代次数
+        for(int i=-10;i<11;++i){
+            for(int j=-10;j<11;++j){
+                int tempX=coordX+i;
+                if(tempX<0)tempX=0;
+                else if (tempX>w)tempX=w;
+                
+                int tempY=coordY+j;
+                if(tempY<0)tempY=0;
+                else if (tempY>h)tempY=h;
+                
+                long k=tempX*w+tempY;
+                
+                double tempIX=(int)IX[4*k]-128;
+                double tempIY=(int)IY[4*k]-128;
+                double tempI=(int)diff[4*k]-128;
+                
+                iixSum+=tempI*tempIX;
+                iiySum+=tempI*tempIY;
+                ixiySum+=tempIX*tempIY;
+                ixixSum+=tempIX*tempIX;
+                iyiySum+=tempIY*tempIY;
+            }
         }
+        double A=ixixSum*iyiySum-ixiySum*ixiySum;
+        u=(iyiySum*iixSum-ixiySum*iiySum)/A;
+        v=(ixixSum*iiySum-ixiySum*iixSum)/A;
+        
+        if(abs(u)<1.0&&abs(v)<1.0)break;
+        coordX+=(u>0?floor(u):ceil(u));
+        coordY+=(v>0?floor(v):ceil(v));
     }
     
-    return sum;
+    NSLog(@"x:%d,y:%d",coordX,coordY);
 }
 
 -(void)saveTextureAsImageWithBytes:(uint8_t*)data width:(int)w height:(int)h filename:(NSString*)name
@@ -568,7 +605,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
     //NSLog(@"%@",filename);
     [UIImageJPEGRepresentation(finalImage, 1.0)writeToFile:filename atomically:YES];
     
-    NSLog(@"save image %@",name);
+    //NSLog(@"save image %@",name);
 }
 
 -(void)saveTextureAsFileWithBytes:(uint8_t*)data width:(int)w height:(int)h filename:(NSString*)name
@@ -587,7 +624,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
     }
     
     ofs.close();
-    NSLog(@"save file %@",name);
+    //NSLog(@"save file %@",name);
 }
 
 -(void)saveTextureWithCoordinateAsFileWithBytes:(uint8_t*)data width:(int)w height:(int)h filename:(NSString*)name
@@ -606,7 +643,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
     }
     
     ofs.close();
-    NSLog(@"save file %@",name);
+    //NSLog(@"save file %@",name);
 }
 
 -(void)saveKeyPointsAsFileWithVector:(std::vector<cv::Point2i>)keyPoints width:(int)w height:(int)h scale:(int)scale filename:(NSString*)name
@@ -624,7 +661,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
             ofs<<endl;
     }
     ofs.close();
-    NSLog(@"save file %@",name);
+    //NSLog(@"save file %@",name);
 }
 
 // Release resources when they are no longer needed.
