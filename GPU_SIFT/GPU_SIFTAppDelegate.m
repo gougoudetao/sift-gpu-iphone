@@ -8,10 +8,10 @@
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application
 {
-    UIImage* image=[UIImage imageNamed:@"now.jpg"];
+    UIImage* image=[UIImage imageNamed:@"car2.jpg"];
     CGImageRef picture = image.CGImage;
     
-    UIImage* preImage=[UIImage imageNamed:@"pre.jpg"];
+    UIImage* preImage=[UIImage imageNamed:@"car1.jpg"];
     CGImageRef prePicture=preImage.CGImage;
     
 	[glView initWithWidth:image.size.width Height:image.size.height];

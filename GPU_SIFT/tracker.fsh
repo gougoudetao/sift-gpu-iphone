@@ -45,10 +45,10 @@ void main()
         u=(iyiySum*iixSum-ixiySum*iiySum)/A;//像素值
         v=(ixixSum*iiySum-ixiySum*iixSum)/A;//像素值
         
-        if(abs(u)<1.0&&abs(v)<1.0) break;
+        if(abs(u)<0.01&&abs(v)<0.01) break;
         cood+=vec2(u/256.0,v/256.0);
         textureCood=vec2(cood.y*256.0,cood.x*256.0)*offset;
     }
         
-    gl_FragColor=vec4(floor(cood.x/256.0),cood.x-floor(cood.x/256.0),floor(cood.y/256.0),cood.y-floor(cood.y/256.0));
+    gl_FragColor=vec4(floor(cood.x)/256.0,cood.x-floor(cood.x),floor(cood.y)/256.0,cood.y-floor(cood.y));
 }

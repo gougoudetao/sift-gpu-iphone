@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A061FCE19ECBF5900B36675 /* car1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3A061FCC19ECBF5900B36675 /* car1.jpg */; };
+		3A061FCF19ECBF5900B36675 /* car2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3A061FCD19ECBF5900B36675 /* car2.jpg */; };
 		3A181EFE19D3E3AF006F519A /* gauss.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 3A181EFC19D3E3AF006F519A /* gauss.fsh */; };
 		3A181EFF19D3E3AF006F519A /* gaussVertex.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 3A181EFD19D3E3AF006F519A /* gaussVertex.vsh */; };
 		3A2BF9A319CC0B2200A53D22 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A2BF9A219CC0B2200A53D22 /* opencv2.framework */; };
@@ -33,6 +35,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3A061FCC19ECBF5900B36675 /* car1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = car1.jpg; sourceTree = "<group>"; };
+		3A061FCD19ECBF5900B36675 /* car2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = car2.jpg; sourceTree = "<group>"; };
 		3A181EF919D3E35C006F519A /* SIFT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SIFT.h; sourceTree = "<group>"; };
 		3A181EFC19D3E3AF006F519A /* gauss.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = gauss.fsh; path = Shaders/gauss.fsh; sourceTree = "<group>"; };
 		3A181EFD19D3E3AF006F519A /* gaussVertex.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = gaussVertex.vsh; path = Shaders/gaussVertex.vsh; sourceTree = "<group>"; };
@@ -158,6 +162,8 @@
 		9CA7277E14226AD400CC88CA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3A061FCC19ECBF5900B36675 /* car1.jpg */,
+				3A061FCD19ECBF5900B36675 /* car2.jpg */,
 				3AB8DC7219D6647500B4AFC4 /* now.jpg */,
 				3AB8DC7319D6647500B4AFC4 /* pre.jpg */,
 				3A6383D619CC2714008A3E6C /* lena.jpg */,
@@ -218,10 +224,12 @@
 				3A181EFF19D3E3AF006F519A /* gaussVertex.vsh in Resources */,
 				3A181EFE19D3E3AF006F519A /* gauss.fsh in Resources */,
 				3AF9D17E19D5489200571976 /* gradientVertex.vsh in Resources */,
+				3A061FCE19ECBF5900B36675 /* car1.jpg in Resources */,
 				3AB8DC7719D6B28F00B4AFC4 /* diff.fsh in Resources */,
 				3AF9D18019D54ADF00571976 /* gradient.fsh in Resources */,
 				3AC2D2AD19E505E90016FE6F /* tracker.fsh in Resources */,
 				3AB8DC7919D6B34300B4AFC4 /* diffVertex.vsh in Resources */,
+				3A061FCF19ECBF5900B36675 /* car2.jpg in Resources */,
 				3AC2D2B119E5163E0016FE6F /* trackerVertex.vsh in Resources */,
 				3AB8DC7519D6647500B4AFC4 /* pre.jpg in Resources */,
 				3AB8DC7419D6647500B4AFC4 /* now.jpg in Resources */,
