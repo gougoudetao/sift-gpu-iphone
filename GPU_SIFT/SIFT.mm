@@ -365,14 +365,14 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
 	originalData = (GLubyte *) CFDataGetBytePtr(data);
     convertToGray(grayData,originalData,width,height);
 	glBindTexture(GL_TEXTURE_2D, pic);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, grayData);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, originalData);
     
     CGDataProviderRef preDataRef=CGImageGetDataProvider(prePicture);
     CFDataRef preData=CGDataProviderCopyData(preDataRef);
     preOriginalData=(GLubyte*)CFDataGetBytePtr(preData);
     convertToGray(preGrayData,preOriginalData,width,height);
     glBindTexture(GL_TEXTURE_2D, prePic);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, preGrayData);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, preOriginalData);
     
     //计算图像金字塔
     for(int i=0;i<4;++i){
