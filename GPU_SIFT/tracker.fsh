@@ -4,6 +4,7 @@ uniform sampler2D picIY;
 uniform sampler2D picDiff;
 uniform mediump float width;
 uniform mediump float height;
+uniform int level;
 
 varying highp vec2 coordinate;
 

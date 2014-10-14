@@ -346,8 +346,8 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         nowTruePoints.push_back(nowPoints[i]);
     }
     
-    [self drawKeypointsAndSaveToFileWithMat:preFrame KeyPoints:keyPoints filename:@"preImage.jpg"];
-    //[self drawFloatKeypointsAndSaveToFileWithMat:nowFrame KeyPoints:nowPoints filename:@"trueImage.jpg"];
+    [self drawKeypointsAndSaveToFileWithMat:preFrame KeyPoints:keyPoints filename:@"preImage.jpg" color:cv::Scalar(0,255,0)];
+    [self drawFloatKeypointsAndSaveToFileWithMat:nowFrame KeyPoints:nowPoints filename:@"trueImage.jpg"];
     [self writeVectorsToFileWithPrekeypointVector:keyPoints nowKeypointVector:nowPoints KeyPointsNum:keyPointsNum filename:@"truePoints.txt"];
     
 	//initializing image data
@@ -365,14 +365,14 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
 	originalData = (GLubyte *) CFDataGetBytePtr(data);
     convertToGray(grayData,originalData,width,height);
 	glBindTexture(GL_TEXTURE_2D, pic);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, originalData);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, grayData);
     
     CGDataProviderRef preDataRef=CGImageGetDataProvider(prePicture);
     CFDataRef preData=CGDataProviderCopyData(preDataRef);
     preOriginalData=(GLubyte*)CFDataGetBytePtr(preData);
     convertToGray(preGrayData,preOriginalData,width,height);
     glBindTexture(GL_TEXTURE_2D, prePic);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, preOriginalData);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, preGrayData);
     
     //计算图像金字塔
     for(int i=0;i<4;++i){
@@ -384,8 +384,8 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         glUseProgram(gauss);
         glVertexAttribPointer(gaussWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
         glVertexAttribPointer(gaussReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
-        glUniform1f(gaussTexelWidthOffset, 1.0/width);
-        glUniform1f(gaussTexelHeightOffset, 1.0/height);
+        glUniform1f(gaussTexelWidthOffset, 1.0/w);
+        glUniform1f(gaussTexelHeightOffset, 1.0/h);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, pic);
         glUniform1i(gaussPic, 0);
@@ -403,8 +403,8 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         glUseProgram(gauss);
         glVertexAttribPointer(gaussWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
         glVertexAttribPointer(gaussReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
-        glUniform1f(gaussTexelWidthOffset, 1.0/width);
-        glUniform1f(gaussTexelHeightOffset, 1.0/height);
+        glUniform1f(gaussTexelWidthOffset, 1.0/w);
+        glUniform1f(gaussTexelHeightOffset, 1.0/h);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, prePic);
         glUniform1i(gaussPic, 0);
@@ -601,7 +601,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
     }
     
 
-    [self drawKeypointsAndSaveToFileWithMat:nowFrame KeyPoints:trackerPoints filename:@"nowImage.jpg"];
+    [self drawKeypointsAndSaveToFileWithMat:nowFrame KeyPoints:trackerPoints filename:@"nowImage.jpg" color:cv::Scalar(255,0,0)];
     [self writeVectorsToFileWithPrekeypointVector:keyPoints nowKeypointVector:trackerPoints KeyPointsNum:keyPointsNum filename:@"points.txt"];
     
 }
@@ -646,10 +646,10 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
     [UIImageJPEGRepresentation(saveImage, 1.0)writeToFile:filename atomically:YES];
 }
 
--(void)drawKeypointsAndSaveToFileWithMat:(cv::Mat&)image KeyPoints:(const std::vector<cv::Point2f>&)keyPoints filename:(NSString*)name
+-(void)drawKeypointsAndSaveToFileWithMat:(cv::Mat&)image KeyPoints:(const std::vector<cv::Point2f>&)keyPoints filename:(NSString*)name color:(cv::Scalar)scalar
 {
     for(int i=0;i<keyPoints.size();++i){
-        cv::circle(image, keyPoints[i], 3, cv::Scalar(0,255,0),-1,8);
+        cv::circle(image, keyPoints[i], 3, scalar,-1,8);
     }
     
     UIImage* saveImage=MatToUIImage(image);
