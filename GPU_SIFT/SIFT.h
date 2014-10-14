@@ -35,7 +35,7 @@
 	GLuint gaussWritingPosition,gaussReadingPosition,gaussTexelWidthOffset,gaussTexelHeightOffset,gaussPic;
 	GLuint gradientWritingPosition,gradientReadingPosition,gradientTexelWidthOffset,gradientTexelHeightOffset,gradientPic;
     GLuint diffWritingPosition,diffReadingPosition,diffPic,preDiffPic;
-    GLuint trackWritingPosition,trackReadingPosition,trackKeyPointsPic,trackIXPic,trackIYPic,trackDiffPic,trackWidth,trackHeight;
+    GLuint trackWritingPosition,trackReadingPosition,trackKeyPointsPic,trackIXPic,trackIYPic,trackDiffPic,trackWidth,trackHeight,trackLevel;
     
     //constants:
 	GLshort writingPosition[8];

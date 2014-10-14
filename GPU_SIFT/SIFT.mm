@@ -197,6 +197,7 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
     trackDiffPic=glGetUniformLocation(track, "picDiff");
     trackWidth=glGetUniformLocation(track, "width");
     trackHeight=glGetUniformLocation(track, "height");
+    trackLevel=glGetUniformLocation(track, "level");
     
 	// ---------------------- BUFFERS AND TEXTURES INITIALIZATION --------------------
 
@@ -545,8 +546,8 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
     uint8_t *keyPointData=(uint8_t*)calloc(sqSize*sqSize*4, sizeof(uint8_t));
     for(int i=0;i<keyPoints.size();++i){
         
-        int x=floor(keyPoints[i].x/16+0.5);
-        int y=floor(keyPoints[i].y/16+0.5);
+        int x=floor(keyPoints[i].x/8+0.5);
+        int y=floor(keyPoints[i].y/8+0.5);
         keyPointData[4*i]=x/256;
         keyPointData[4*i+1]=x%256;
         keyPointData[4*i+2]=y/256;
@@ -585,6 +586,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         glActiveTexture(GL_TEXTURE0);
         glUniform1f(trackWidth, (float)w);
         glUniform1f(trackHeight, (float)h);
+        glUniform1i(trackLevel, i);
         glBindFramebuffer(GL_FRAMEBUFFER, trackkeyPointsBuf);
         glClear(GL_COLOR_ATTACHMENT0);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

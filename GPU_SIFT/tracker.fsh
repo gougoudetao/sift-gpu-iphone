@@ -20,7 +20,7 @@ void main()
     
     highp vec4 content=texture2D(picKeyPoints,coordinate);//取得坐标点组成纹理内容
     
-    highp vec2 cood=vec2(2.0*(content.x*256.0+content.y),2.0*(content.z*256.0+content.w));//将纹理内容解释成图像坐标除以256
+    highp vec2 cood=vec2((content.x*256.0+content.y),(content.z*256.0+content.w));//将纹理内容解释成图像坐标除以256
     
     highp vec2 textureCood=vec2(cood.y*256.0,cood.x*256.0)*offset;//将图像坐标转化成纹理坐标，我不知道抽什么风这里坐标x和y是相反的！
     
@@ -46,10 +46,15 @@ void main()
         u=(iyiySum*iixSum-ixiySum*iiySum)/A;//像素值
         v=(ixixSum*iiySum-ixiySum*iixSum)/A;//像素值
         
-        if(abs(u)<0.01&&abs(v)<0.01) break;
+        if(abs(u)<=1.0&&abs(v)<=1.0) break;
         cood+=vec2(u/256.0,v/256.0);
         textureCood=vec2(cood.y*256.0,cood.x*256.0)*offset;
     }
-        
-    gl_FragColor=vec4(floor(cood.x)/256.0,cood.x-floor(cood.x),floor(cood.y)/256.0,cood.y-floor(cood.y));
+    
+    if(level!=0){
+        cood*=2.0;
+        gl_FragColor=vec4(floor(cood.x)/256.0,cood.x-floor(cood.x),floor(cood.y)/256.0,cood.y-floor(cood.y));
+    }
+    else
+        gl_FragColor=vec4(floor(cood.x)/256.0,cood.x-floor(cood.x),floor(cood.y)/256.0,cood.y-floor(cood.y));
 }
