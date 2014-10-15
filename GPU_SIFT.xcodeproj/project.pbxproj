@@ -30,7 +30,6 @@
 		9CA7271E142269B500CC88CA /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CA7271D142269B500CC88CA /* OpenGLES.framework */; };
 		9CA72727142269B500CC88CA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA72726142269B500CC88CA /* main.m */; };
 		9CA7272A142269B500CC88CA /* GPU_SIFTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA72729142269B500CC88CA /* GPU_SIFTAppDelegate.m */; };
-		9CA7275D14226AA900CC88CA /* KeyPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA7275A14226AA900CC88CA /* KeyPoint.m */; };
 		9CA7278214226D2600CC88CA /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7278114226D2600CC88CA /* MainWindow.xib */; };
 /* End PBXBuildFile section */
 
@@ -63,8 +62,6 @@
 		9CA72726142269B500CC88CA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		9CA72728142269B500CC88CA /* GPU_SIFTAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPU_SIFTAppDelegate.h; sourceTree = "<group>"; };
 		9CA72729142269B500CC88CA /* GPU_SIFTAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPU_SIFTAppDelegate.m; sourceTree = "<group>"; };
-		9CA7275914226AA900CC88CA /* KeyPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyPoint.h; sourceTree = "<group>"; };
-		9CA7275A14226AA900CC88CA /* KeyPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyPoint.m; sourceTree = "<group>"; };
 		9CA7278114226D2600CC88CA /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,8 +119,6 @@
 			children = (
 				9CA7277E14226AD400CC88CA /* Resources */,
 				9CA7275F14226AB000CC88CA /* Shaders */,
-				9CA7275914226AA900CC88CA /* KeyPoint.h */,
-				9CA7275A14226AA900CC88CA /* KeyPoint.m */,
 				3A181EF919D3E35C006F519A /* SIFT.h */,
 				3A854CC119EA62D1008B2DD2 /* SIFT.mm */,
 				9CA72728142269B500CC88CA /* GPU_SIFTAppDelegate.h */,
@@ -247,7 +242,6 @@
 				9CA72727142269B500CC88CA /* main.m in Sources */,
 				3A854CC219EA62D1008B2DD2 /* SIFT.mm in Sources */,
 				9CA7272A142269B500CC88CA /* GPU_SIFTAppDelegate.m in Sources */,
-				9CA7275D14226AA900CC88CA /* KeyPoint.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

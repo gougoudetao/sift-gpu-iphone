@@ -7,12 +7,6 @@
 #import "SIFT.h"
 #define STRINGIFY(A) #A
 
-#ifdef _ARM_ARCH_7
-	#import <arm_neon.h>
-#endif
-
-#import "keyPoint.h"
-
 #if 1
 #define TS(name) int64 t_##name = cv::getTickCount()
 #define TE(name) printf("TIMER_" #name ": %.2fms\n", 1000.*((cv::getTickCount() - t_##name) / cv::getTickFrequency()))
@@ -341,15 +335,17 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
     std::vector<cv::Point2f> preTruePoints,nowTruePoints;
     
     for(int i=0;i<keyPointsNum;++i){
-        if(!status[i]) continue;
+        if(!status[i])continue;
         
         preTruePoints.push_back(keyPoints[i]);
         nowTruePoints.push_back(nowPoints[i]);
     }
+    NSLog(@"tracked points num:%d",nowTruePoints.size());
     
     [self drawKeypointsAndSaveToFileWithMat:preFrame KeyPoints:keyPoints filename:@"preImage.jpg" color:cv::Scalar(0,255,0)];
-    [self drawFloatKeypointsAndSaveToFileWithMat:nowFrame KeyPoints:nowPoints filename:@"trueImage.jpg"];
+    [self drawFloatKeypointsAndSaveToFileWithMat:nowFrame KeyPoints:nowTruePoints filename:@"trueImage.jpg"];
     [self writeVectorsToFileWithPrekeypointVector:keyPoints nowKeypointVector:nowPoints KeyPointsNum:keyPointsNum filename:@"truePoints.txt"];
+    
     
 	//initializing image data
 	uint8_t *originalData,*grayData;
@@ -375,6 +371,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
     glBindTexture(GL_TEXTURE_2D, prePic);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, preGrayData);
     
+    TS(BUILDPYRAMID);
     //计算图像金字塔
     for(int i=0;i<4;++i){
         int w=width>>i;
@@ -451,7 +448,6 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
             glClear(GL_COLOR_BUFFER_BIT);
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         }
-        
         uint8_t *testDiffData;
         testDiffData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
         glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testDiffData);
@@ -539,6 +535,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         free(testGradientIXData);
         free(testGradientIYData);
     }
+    TE(BUILDPYRAMID);
     
     std::vector<cv::Point2f> trackerPoints;
     
@@ -565,7 +562,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sqSize, sqSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, keyPointData);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, trackKeyPointsTex, 0);
     
-    
+    TS(TRACK);
     glViewport(0, 0, sqSize, sqSize);
     for(int i=3;i>=0;--i){
         int w=width>>i;
@@ -601,6 +598,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         }
         free(testTrackData);
     }
+    TE(TRACK);
     
 
     [self drawKeypointsAndSaveToFileWithMat:nowFrame KeyPoints:trackerPoints filename:@"nowImage.jpg" color:cv::Scalar(255,0,0)];
@@ -629,6 +627,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
     for(int i=0;i<keyNumber;++i){
         int coordX=data[4*i]*256+data[4*i+1];
         int coordY=data[4*i+2]*256+data[4*i+3];
+        if(coordX>width||coordY>height||coordX<0||coordY<0) continue;
         cv::Point2f temp(coordX,coordY);
         points.push_back(temp);
     }
