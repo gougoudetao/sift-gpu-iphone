@@ -13,7 +13,7 @@
 	int height;
 	
 	// OpenGL framebuffer pointers:
-	GLuint renderBuf, dispBuf;
+//	GLuint renderBuf, dispBuf;
     GLuint gaussBuf[4],preGaussBuf[4],diffBuf[4];
     GLuint gradientBuf[4][2];
     GLuint spatialGradBuf[4];

@@ -276,12 +276,12 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gradientTex[i][1], 0);
     }
     
-	glGenFramebuffers(1, &dispBuf);
-	glBindFramebuffer(GL_FRAMEBUFFER, dispBuf);
-	glGenRenderbuffers(1, &renderBuf);
-	glBindRenderbuffer(GL_RENDERBUFFER, renderBuf);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, renderBuf);
-	[context renderbufferStorage:GL_RENDERBUFFER fromDrawable:(id<EAGLDrawable>)self.layer];
+//	glGenFramebuffers(1, &dispBuf);
+//	glBindFramebuffer(GL_FRAMEBUFFER, dispBuf);
+//	glGenRenderbuffers(1, &renderBuf);
+//	glBindRenderbuffer(GL_RENDERBUFFER, renderBuf);
+//	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, renderBuf);
+//	[context renderbufferStorage:GL_RENDERBUFFER fromDrawable:(id<EAGLDrawable>)self.layer];
 	
 }
 
@@ -379,6 +379,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         glViewport(0, 0, w, h);
         
         //求高斯图像
+        TS(NOWGAUSS);
         glUseProgram(gauss);
         glVertexAttribPointer(gaussWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
         glVertexAttribPointer(gaussReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
@@ -390,14 +391,16 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         glBindFramebuffer(GL_FRAMEBUFFER, gaussBuf[i]);
         glClear(GL_COLOR_BUFFER_BIT);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        TE(NOWGAUSS);
         
         //读取纹理到图片并显示
-        uint8_t *testGaussData;
-        testGaussData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
-        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testGaussData);
-        [self saveTextureAsImageWithBytes:testGaussData width:w height:h filename:[NSString stringWithFormat:@"gaussLevel%d.jpg",i]];
-        [self saveTextureWithCoordinateAsFileWithBytes:testGaussData width:w height:h filename:[NSString stringWithFormat:@"gaussLevel%d.txt",i]];
+//        uint8_t *testGaussData;
+//        testGaussData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
+//        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testGaussData);
+//        [self saveTextureAsImageWithBytes:testGaussData width:w height:h filename:[NSString stringWithFormat:@"gaussLevel%d.jpg",i]];
+//        [self saveTextureWithCoordinateAsFileWithBytes:testGaussData width:w height:h filename:[NSString stringWithFormat:@"gaussLevel%d.txt",i]];
         
+        TS(PREGAUSS);
         glUseProgram(gauss);
         glVertexAttribPointer(gaussWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
         glVertexAttribPointer(gaussReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
@@ -409,16 +412,18 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         glBindFramebuffer(GL_FRAMEBUFFER, preGaussBuf[i]);
         glClear(GL_COLOR_BUFFER_BIT);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        TE(PREGAUSS);
         
         //读取纹理到图片并显示
-        uint8_t *testPreGaussData;
-        testPreGaussData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
-        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testPreGaussData);
-        [self saveTextureAsImageWithBytes:testPreGaussData width:w height:h filename:[NSString stringWithFormat:@"preGaussLevel%d.jpg",i]];
-        [self saveTextureWithCoordinateAsFileWithBytes:testPreGaussData width:w height:h filename:[NSString stringWithFormat:@"preGaussLevel%d.txt",i]];
+//        uint8_t *testPreGaussData;
+//        testPreGaussData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
+//        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testPreGaussData);
+//        [self saveTextureAsImageWithBytes:testPreGaussData width:w height:h filename:[NSString stringWithFormat:@"preGaussLevel%d.jpg",i]];
+//        [self saveTextureWithCoordinateAsFileWithBytes:testPreGaussData width:w height:h filename:[NSString stringWithFormat:@"preGaussLevel%d.txt",i]];
         
         
         //求差分图像
+        TS(DIFF);
         if(i!=0){
             glUseProgram(diff);
             glVertexAttribPointer(diffWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
@@ -448,14 +453,16 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
             glClear(GL_COLOR_BUFFER_BIT);
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         }
-        uint8_t *testDiffData;
-        testDiffData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
-        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testDiffData);
-        [self saveTextureWithCoordinateAsFileWithBytes:testDiffData width:w height:h filename:[NSString stringWithFormat:@"diff%d.txt",i]];
+        TE(DIFF);
+//        uint8_t *testDiffData;
+//        testDiffData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
+//        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testDiffData);
+//        [self saveTextureWithCoordinateAsFileWithBytes:testDiffData width:w height:h filename:[NSString stringWithFormat:@"diff%d.txt",i]];
         
         
         
         //求IX
+        TS(IX);
         if(i!=0){
             glUseProgram(gradient);
             glVertexAttribPointer(gradientWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
@@ -483,13 +490,15 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
             glClear(GL_COLOR_BUFFER_BIT);
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         }
-        uint8_t *testGradientIXData;
-        testGradientIXData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
-        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testGradientIXData);
-        [self saveTextureWithCoordinateAsFileWithBytes:testGradientIXData width:w height:h filename:[NSString stringWithFormat:@"gradientIX%d.txt",i]];
+        TE(IX);
+//        uint8_t *testGradientIXData;
+//        testGradientIXData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
+//        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testGradientIXData);
+//        [self saveTextureWithCoordinateAsFileWithBytes:testGradientIXData width:w height:h filename:[NSString stringWithFormat:@"gradientIX%d.txt",i]];
         
         
         //求IY
+        TS(IY);
         if(i!=3){
             glUseProgram(gradient);
             glVertexAttribPointer(gradientWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
@@ -517,11 +526,11 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
             glClear(GL_COLOR_BUFFER_BIT);
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         }
-        
-        uint8_t *testGradientIYData;
-        testGradientIYData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
-        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testGradientIYData);
-        [self saveTextureWithCoordinateAsFileWithBytes:testGradientIYData width:w height:h filename:[NSString stringWithFormat:@"gradientIY%d.txt",i]];
+        TE(IY);
+//        uint8_t *testGradientIYData;
+//        testGradientIYData=(uint8_t*)calloc(4*w*h, sizeof(uint8_t));
+//        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, testGradientIYData);
+//        [self saveTextureWithCoordinateAsFileWithBytes:testGradientIYData width:w height:h filename:[NSString stringWithFormat:@"gradientIY%d.txt",i]];
         
         
 //        if(i==3){
@@ -529,11 +538,11 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
 //        }
         
         //清理申请变量
-        free(testGaussData);
-        free(testPreGaussData);
-        free(testDiffData);
-        free(testGradientIXData);
-        free(testGradientIYData);
+//        free(testGaussData);
+//        free(testPreGaussData);
+//        free(testDiffData);
+//        free(testGradientIXData);
+//        free(testGradientIYData);
     }
     TE(BUILDPYRAMID);
     
@@ -562,11 +571,12 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sqSize, sqSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, keyPointData);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, trackKeyPointsTex, 0);
     
-    TS(TRACK);
+    
     glViewport(0, 0, sqSize, sqSize);
     for(int i=3;i>=0;--i){
         int w=width>>i;
         int h=height>>i;
+        TS(TRACK);
         glUseProgram(track);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, trackKeyPointsTex);
@@ -587,10 +597,12 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         glBindFramebuffer(GL_FRAMEBUFFER, trackkeyPointsBuf);
         glClear(GL_COLOR_ATTACHMENT0);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-        
+        TE(TRACK);
         uint8_t *testTrackData;
         testTrackData=(uint8_t*)calloc(4*sqSize*sqSize, sizeof(uint8_t));
+        TS(BACKTO);
         glReadPixels(0, 0, sqSize, sqSize, GL_RGBA, GL_UNSIGNED_BYTE, testTrackData);
+        TE(BACKTO);
         [self saveTextureAsFileWithBytes:testTrackData width:sqSize height:sqSize filename:[NSString stringWithFormat:@"track%d.txt",i]];
         
         if(i==0){
@@ -598,7 +610,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         }
         free(testTrackData);
     }
-    TE(TRACK);
+    
     
 
     [self drawKeypointsAndSaveToFileWithMat:nowFrame KeyPoints:trackerPoints filename:@"nowImage.jpg" color:cv::Scalar(255,0,0)];
