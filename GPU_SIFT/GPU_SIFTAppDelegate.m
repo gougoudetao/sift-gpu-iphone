@@ -16,7 +16,8 @@
     
 	[glView initWithWidth:image.size.width Height:image.size.height];
 	
-	[glView computeSiftOnCGImage:picture preCGImage:prePicture];
+    //for(int i=0;i<5;++i)
+    [glView computeSiftOnCGImage:picture preCGImage:prePicture];
 }
 
 - (void) applicationWillResignActive:(UIApplication *)application
