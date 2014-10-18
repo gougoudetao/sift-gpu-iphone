@@ -476,7 +476,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         
         //求IY
         //TS(IY);
-        if(i!=3){
+        if(i!=0){
             glUseProgram(gradient);
             glVertexAttribPointer(gradientWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
             glVertexAttribPointer(gradientReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
