@@ -43,6 +43,6 @@
 }
 
 -(void) initWithWidth:(int)picWidth Height:(int)picHeight;
--(void) computeSiftOnCGImage:(CGImageRef)picture preCGImage:(CGImageRef)prePicture;
+-(void) computeOpticalFlowOnCGImage:(CGImageRef)picture preCGImage:(CGImageRef)prePicture;
 
 @end

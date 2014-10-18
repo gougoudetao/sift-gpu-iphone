@@ -16,8 +16,8 @@
     
 	[glView initWithWidth:image.size.width Height:image.size.height];
 	
-    //for(int i=0;i<5;++i)
-    [glView computeSiftOnCGImage:picture preCGImage:prePicture];
+    //for(int i=0;i<10;++i)
+        [glView computeOpticalFlowOnCGImage:picture preCGImage:prePicture];
 }
 
 - (void) applicationWillResignActive:(UIApplication *)application
