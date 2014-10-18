@@ -537,16 +537,21 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         keyPointData[4*i+3]=y%256;
     }
     
-    glGenFramebuffers(1, &trackkeyPointsBuf);
-    glBindFramebuffer(GL_FRAMEBUFFER, trackkeyPointsBuf);
-    glGenTextures(1, &trackKeyPointsTex);
-    glBindTexture(GL_TEXTURE_2D, trackKeyPointsTex);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    for(int i=0;i<5;++i){
+        glGenFramebuffers(1, &trackkeyPointsBuf[i]);
+        glBindFramebuffer(GL_FRAMEBUFFER, trackkeyPointsBuf[i]);
+        glGenTextures(1, &trackKeyPointsTex[i]);
+        glBindTexture(GL_TEXTURE_2D, trackKeyPointsTex[i]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sqSize, sqSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, trackKeyPointsTex[i], 0);
+    }
+    
+    glBindTexture(GL_TEXTURE_2D, trackKeyPointsTex[4]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sqSize, sqSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, keyPointData);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, trackKeyPointsTex, 0);
     
     TS(TRACK);
     glViewport(0, 0, sqSize, sqSize);
@@ -556,7 +561,7 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         
         glUseProgram(track);
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, trackKeyPointsTex);
+        glBindTexture(GL_TEXTURE_2D, trackKeyPointsTex[i+1]);
         glUniform1i(trackKeyPointsPic, 0);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, gradientTex[i][0]);
@@ -571,10 +576,9 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
         glUniform1f(trackWidth, (float)w);
         glUniform1f(trackHeight, (float)h);
         glUniform1i(trackLevel, i);
-        glBindFramebuffer(GL_FRAMEBUFFER, trackkeyPointsBuf);
+        glBindFramebuffer(GL_FRAMEBUFFER, trackkeyPointsBuf[i]);
         glClear(GL_COLOR_ATTACHMENT0);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-        
     }
     TE(TRACK);
     uint8_t *testTrackData;

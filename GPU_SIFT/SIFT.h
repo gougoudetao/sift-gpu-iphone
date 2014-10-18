@@ -18,7 +18,7 @@
     GLuint gradientBuf[4][2];
     GLuint spatialGradBuf[4];
     GLuint timeGradBuf[4];
-    GLuint trackkeyPointsBuf;
+    GLuint trackkeyPointsBuf[5];
     
 	// OpenGL texture pointers:
 	GLuint pic,prePic;
@@ -26,7 +26,7 @@
     GLuint gradientTex[4][2];
 	GLuint spatialGradTex[4];
     GLuint timeGradTex[4];
-    GLuint trackKeyPointsTex;
+    GLuint trackKeyPointsTex[5];
     
 	// OpenGL program pointers:
 	GLuint gauss,gradient,diff,spatialGrad,timeGrad,track;
