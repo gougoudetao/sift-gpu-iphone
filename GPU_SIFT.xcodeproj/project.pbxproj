@@ -12,15 +12,14 @@
 		3A181EFE19D3E3AF006F519A /* gauss.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 3A181EFC19D3E3AF006F519A /* gauss.fsh */; };
 		3A181EFF19D3E3AF006F519A /* gaussVertex.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 3A181EFD19D3E3AF006F519A /* gaussVertex.vsh */; };
 		3A2BF9A319CC0B2200A53D22 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A2BF9A219CC0B2200A53D22 /* opencv2.framework */; };
-		3A6383D719CC2714008A3E6C /* lena.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3A6383D619CC2714008A3E6C /* lena.jpg */; };
 		3A854CC219EA62D1008B2DD2 /* SIFT.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A854CC119EA62D1008B2DD2 /* SIFT.mm */; };
-		3AB8DC7419D6647500B4AFC4 /* now.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3AB8DC7219D6647500B4AFC4 /* now.jpg */; };
-		3AB8DC7519D6647500B4AFC4 /* pre.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3AB8DC7319D6647500B4AFC4 /* pre.jpg */; };
 		3AB8DC7719D6B28F00B4AFC4 /* diff.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 3AB8DC7619D6B28F00B4AFC4 /* diff.fsh */; };
 		3AB8DC7919D6B34300B4AFC4 /* diffVertex.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 3AB8DC7819D6B34300B4AFC4 /* diffVertex.vsh */; };
 		3ABAE07419CD53790067AF48 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ABAE07319CD53790067AF48 /* CoreImage.framework */; };
 		3AC2D2AD19E505E90016FE6F /* tracker.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 3AC2D2AB19E505E90016FE6F /* tracker.fsh */; };
 		3AC2D2B119E5163E0016FE6F /* trackerVertex.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 3AC2D2AF19E5163E0016FE6F /* trackerVertex.vsh */; };
+		3AD389F519F36C3B00164212 /* pre.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3AD389F319F36C3B00164212 /* pre.jpg */; };
+		3AD389F619F36C3B00164212 /* now.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3AD389F419F36C3B00164212 /* now.jpg */; };
 		3AF9D17E19D5489200571976 /* gradientVertex.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 3AF9D17D19D5489200571976 /* gradientVertex.vsh */; };
 		3AF9D18019D54ADF00571976 /* gradient.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 3AF9D17F19D54ADF00571976 /* gradient.fsh */; };
 		9CA72716142269B500CC88CA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CA72715142269B500CC88CA /* UIKit.framework */; };
@@ -40,15 +39,14 @@
 		3A181EFC19D3E3AF006F519A /* gauss.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = gauss.fsh; path = Shaders/gauss.fsh; sourceTree = "<group>"; };
 		3A181EFD19D3E3AF006F519A /* gaussVertex.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = gaussVertex.vsh; path = Shaders/gaussVertex.vsh; sourceTree = "<group>"; };
 		3A2BF9A219CC0B2200A53D22 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = ../../Documents/Projects/iOS/opencv2.framework; sourceTree = "<group>"; };
-		3A6383D619CC2714008A3E6C /* lena.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = lena.jpg; sourceTree = "<group>"; };
 		3A854CC119EA62D1008B2DD2 /* SIFT.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SIFT.mm; sourceTree = "<group>"; };
-		3AB8DC7219D6647500B4AFC4 /* now.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = now.jpg; sourceTree = "<group>"; };
-		3AB8DC7319D6647500B4AFC4 /* pre.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = pre.jpg; sourceTree = "<group>"; };
 		3AB8DC7619D6B28F00B4AFC4 /* diff.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = diff.fsh; sourceTree = "<group>"; };
 		3AB8DC7819D6B34300B4AFC4 /* diffVertex.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = diffVertex.vsh; sourceTree = "<group>"; };
 		3ABAE07319CD53790067AF48 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		3AC2D2AB19E505E90016FE6F /* tracker.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = tracker.fsh; sourceTree = "<group>"; };
 		3AC2D2AF19E5163E0016FE6F /* trackerVertex.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = trackerVertex.vsh; sourceTree = "<group>"; };
+		3AD389F319F36C3B00164212 /* pre.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = pre.jpg; sourceTree = "<group>"; };
+		3AD389F419F36C3B00164212 /* now.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = now.jpg; sourceTree = "<group>"; };
 		3AF9D17D19D5489200571976 /* gradientVertex.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = gradientVertex.vsh; sourceTree = "<group>"; };
 		3AF9D17F19D54ADF00571976 /* gradient.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = gradient.fsh; sourceTree = "<group>"; };
 		9CA72711142269B500CC88CA /* GPU_SIFT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GPU_SIFT.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -157,11 +155,10 @@
 		9CA7277E14226AD400CC88CA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3AD389F319F36C3B00164212 /* pre.jpg */,
+				3AD389F419F36C3B00164212 /* now.jpg */,
 				3A061FCC19ECBF5900B36675 /* car1.jpg */,
 				3A061FCD19ECBF5900B36675 /* car2.jpg */,
-				3AB8DC7219D6647500B4AFC4 /* now.jpg */,
-				3AB8DC7319D6647500B4AFC4 /* pre.jpg */,
-				3A6383D619CC2714008A3E6C /* lena.jpg */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -215,7 +212,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A6383D719CC2714008A3E6C /* lena.jpg in Resources */,
 				3A181EFF19D3E3AF006F519A /* gaussVertex.vsh in Resources */,
 				3A181EFE19D3E3AF006F519A /* gauss.fsh in Resources */,
 				3AF9D17E19D5489200571976 /* gradientVertex.vsh in Resources */,
@@ -225,9 +221,9 @@
 				3AC2D2AD19E505E90016FE6F /* tracker.fsh in Resources */,
 				3AB8DC7919D6B34300B4AFC4 /* diffVertex.vsh in Resources */,
 				3A061FCF19ECBF5900B36675 /* car2.jpg in Resources */,
+				3AD389F519F36C3B00164212 /* pre.jpg in Resources */,
+				3AD389F619F36C3B00164212 /* now.jpg in Resources */,
 				3AC2D2B119E5163E0016FE6F /* trackerVertex.vsh in Resources */,
-				3AB8DC7519D6647500B4AFC4 /* pre.jpg in Resources */,
-				3AB8DC7419D6647500B4AFC4 /* now.jpg in Resources */,
 				9CA7278214226D2600CC88CA /* MainWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

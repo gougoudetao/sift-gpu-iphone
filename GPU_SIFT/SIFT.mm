@@ -305,24 +305,24 @@ void convertToGray (uint8_t * __restrict dest, uint8_t * __restrict src, int wid
     cv::goodFeaturesToTrack(preGray, keyPoints, 500, 0.01, 10,cv::Mat(), 3, 0, 0.04);
     cv::cornerSubPix(preGray, keyPoints, subPixWinSize, cv::Size(-1,-1), termcrit);
     int keyPointsNum=keyPoints.size();
-//    std::vector<uchar> status;
-//    std::vector<float> err;
-//    
-//    cv::calcOpticalFlowPyrLK(preGray, nowGray, keyPoints, nowPoints, status, err);
-//    
-//    std::vector<cv::Point2f> preTruePoints,nowTruePoints;
-//    
-//    for(int i=0;i<keyPointsNum;++i){
-//        if(!status[i])continue;
-//        
-//        preTruePoints.push_back(keyPoints[i]);
-//        nowTruePoints.push_back(nowPoints[i]);
-//    }
-//    NSLog(@"tracked points num:%d",nowTruePoints.size());
-//    
-//    [self drawKeypointsAndSaveToFileWithMat:preFrame KeyPoints:keyPoints filename:@"preImage.jpg" color:cv::Scalar(0,255,0)];
-//    [self drawFloatKeypointsAndSaveToFileWithMat:nowFrame KeyPoints:nowTruePoints filename:@"trueImage.jpg"];
-//    [self writeVectorsToFileWithPrekeypointVector:keyPoints nowKeypointVector:nowPoints KeyPointsNum:keyPointsNum filename:@"truePoints.txt"];
+    std::vector<uchar> status;
+    std::vector<float> err;
+    
+    cv::calcOpticalFlowPyrLK(preGray, nowGray, keyPoints, nowPoints, status, err);
+    
+    std::vector<cv::Point2f> preTruePoints,nowTruePoints;
+    
+    for(int i=0;i<keyPointsNum;++i){
+        if(!status[i])continue;
+        
+        preTruePoints.push_back(keyPoints[i]);
+        nowTruePoints.push_back(nowPoints[i]);
+    }
+    NSLog(@"tracked points num:%d",nowTruePoints.size());
+    
+    [self drawKeypointsAndSaveToFileWithMat:preFrame KeyPoints:keyPoints filename:@"preImage.jpg" color:cv::Scalar(0,255,0)];
+    [self drawFloatKeypointsAndSaveToFileWithMat:nowFrame KeyPoints:nowTruePoints filename:@"trueImage.jpg"];
+    [self writeVectorsToFileWithPrekeypointVector:keyPoints nowKeypointVector:nowPoints KeyPointsNum:keyPointsNum filename:@"truePoints.txt"];
     
 	//initializing image data
 	uint8_t *originalData,*grayData;
